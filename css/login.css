@@ -1,0 +1,73 @@
+/* ========================================
+   SENAI@107A - ESTILO EXCLUSIVO LOGIN
+   (NÃO AFETA OUTRAS TELAS)
+======================================== */
+
+.login-container {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(15, 23, 42, 0.95);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 0 50px rgba(14, 165, 233, 0.35);
+}
+
+.login-titulo {
+  text-align: center;
+  font-size: 2rem;
+  color: #38bdf8;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
+
+.login-campo {
+  margin-bottom: 20px;
+}
+
+.login-campo label {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  color: #cbd5f5;
+}
+
+.login-campo input {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  border-radius: 14px;
+  border: 1px solid #334155;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 1rem;
+  outline: none;
+}
+
+.login-campo input::placeholder {
+  color: #64748b;
+}
+
+.login-campo input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 2px rgba(56,189,248,0.3);
+}
+
+.login-botao {
+  width: 100%;
+  height: 52px;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.login-rodape {
+  margin-top: 25px;
+  font-size: 0.8rem;
+  text-align: center;
+  color: #94a3b8;
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>SENAI@107A - Checklist</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- BOTÃO VOLTAR -->
+  <button class="botao botao-voltar" onclick="voltarDashboard()">
+    ⬅ Voltar ao Painel
+  </button>
+
+  <div class="titulo">Checklist Diário – Laboratório 107A</div>
+
+  <!-- ITENS DO LABORATÓRIO -->
+  <div class="secao">
+    <h3>Itens do Laboratório</h3>
+    <div id="itensLaboratorio"></div>
+  </div>
+
+  <!-- ARMÁRIO 01 -->
+  <div class="secao">
+    <h3>Armário nº 01</h3>
+    <div id="armario01"></div>
+  </div>
+
+  <!-- ARMÁRIO 02 -->
+  <div class="secao">
+    <h3>Armário nº 02</h3>
+    <div id="armario02"></div>
+  </div>
+
+  <!-- OBSERVAÇÕES GERAIS -->
+  <div class="secao">
+    <h3>Observações Gerais</h3>
+    <textarea id="observacoesGerais" rows="4"
+      style="width:100%; padding:12px; border-radius:12px;"></textarea>
+  </div>
+
+  <button class="botao" onclick="salvarChecklist()">
+    Salvar Checklist
+  </button>
+
+  <div class="rodape">
+    Desenvolvido por <strong>acleal03</strong>
+  </div>
+
+</div>
+
+<script type="module" src="js/checklist.js"></script>
+<script>
+function voltarDashboard() {
+  window.location.href = "dashboard.html";
+}
+</script>
+</body>
+</html>

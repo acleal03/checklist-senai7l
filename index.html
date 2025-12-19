@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>SENAI@107A - Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS GLOBAL (inalterado) -->
+  <link rel="stylesheet" href="css/estilo.css">
+
+  <!-- CSS SOMENTE DO LOGIN -->
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+<div class="login-container">
+
+  <div class="login-titulo">SENAI@107A</div>
+
+  <div class="login-campo">
+    <label for="email">Usuário</label>
+    <input
+      type="email"
+      id="email"
+      placeholder="usuario@fiemg.com.br"
+      autocomplete="username"
+    >
+  </div>
+
+  <div class="login-campo">
+    <label for="senha">Senha</label>
+    <input
+      type="password"
+      id="senha"
+      placeholder="Digite sua senha"
+      autocomplete="current-password"
+    >
+  </div>
+
+  <button class="login-botao" onclick="realizarLogin()">
+    Entrar
+  </button>
+
+  <div class="login-rodape">
+    Desenvolvido por <strong>acleal03</strong>
+  </div>
+
+</div>
+
+<script type="module" src="js/login.js"></script>
+</body>
+</html>

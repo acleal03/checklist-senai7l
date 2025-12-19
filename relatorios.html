@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>SENAI@107A - Relatórios</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="css/estilo.css">
+
+  <!-- jsPDF (forma estável) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</head>
+<body>
+
+<div class="container">
+
+  <button class="botao botao-voltar" onclick="voltarDashboard()">
+    ⬅ Voltar ao Painel
+  </button>
+
+  <div class="titulo">Relatórios de Checklist</div>
+
+  <div class="tabela-relatorios">
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Usuário</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaRelatorios"></tbody>
+    </table>
+  </div>
+
+  <div class="rodape">
+    Desenvolvido por <strong>acleal03</strong>
+  </div>
+
+</div>
+
+<script type="module" src="js/relatorios.js"></script>
+<script>
+function voltarDashboard() {
+  window.location.href = "dashboard.html";
+}
+</script>
+</body>
+</html>

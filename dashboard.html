@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>SENAI@107A - Painel Principal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<div class="container">
+
+  <div class="titulo">SENAI@107A</div>
+
+  <!-- AÇÕES PRINCIPAIS -->
+  <div class="card-opcao" onclick="irChecklist()">
+    📋 Fazer Checklist
+  </div>
+
+  <div class="card-opcao" onclick="irRelatorios()">
+    📄 Relatórios
+  </div>
+
+  <!-- LOGOFF -->
+  <button class="botao botao-voltar" onclick="realizarLogoff()">
+    Sair
+  </button>
+
+  <div class="rodape">
+    Desenvolvido por <strong>acleal03</strong>
+  </div>
+
+</div>
+
+<script type="module">
+  import { supabase } from "./js/supabase.js";
+
+  window.realizarLogoff = async function () {
+    await supabase.auth.signOut();
+    window.location.href = "index.html";
+  };
+
+  window.irChecklist = () => window.location.href = "checklist.html";
+  window.irRelatorios = () => window.location.href = "relatorios.html";
+</script>
+
+</body>
+</html>
