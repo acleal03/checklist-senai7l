@@ -525,3 +525,8 @@ body {
 #listaAmbientes .card {
   margin-bottom: 22px;
 }
+
+/* REMOVE o margin-top padrão dos botões APENAS aqui */
+.acoes-ambiente .botao {
+  margin-top: 0;
+}
