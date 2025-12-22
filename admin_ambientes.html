@@ -1,3 +1,71 @@
-ódigo do Ambiente 
-Ex: 101A
-De
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Administração de Ambientes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<script>
+  if (!sessionStorage.getItem("usuario_id") || sessionStorage.getItem("perfil") !== "admin") {
+    window.location.href = "ambientes.html";
+  }
+</script>
+
+<div class="container">
+
+  <div class="titulo">Administração de Ambientes</div>
+
+  <!-- FORMULÁRIO -->
+  <div class="card">
+
+    <!-- LABELS -->
+    <div class="linha-labels">
+      <div class="label-col codigo">Código do Ambiente</div>
+      <div class="label-col descricao">Descrição do Ambiente</div>
+    </div>
+
+    <!-- INPUTS -->
+    <div class="linha-inputs">
+      <input
+        type="text"
+        id="codigo"
+        maxlength="8"
+        placeholder="Ex: 101A"
+        class="input-admin codigo"
+      >
+
+      <input
+        type="text"
+        id="descricao"
+        placeholder="Ex: Laboratório de Eletrotécnica"
+        class="input-admin descricao"
+      >
+    </div>
+
+    <!-- BOTÃO -->
+    <button class="botao" style="margin-top:28px;" onclick="salvarAmbiente()">
+      💾 Salvar Ambiente
+    </button>
+
+  </div>
+
+  <!-- AÇÕES -->
+  <div class="linha-acoes">
+    <button class="botao botao-voltar" onclick="voltarAdmin()">⬅ Voltar</button>
+    <button class="botao botao-sair" onclick="sairSistema()">🚪 Sair</button>
+  </div>
+
+  <div class="rodape">
+    Desenvolvido por <strong>acleal03</strong>
+  </div>
+
+</div>
+
+<script src="js/admin_ambientes.js"></script>
+
+</body>
+</html>

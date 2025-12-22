@@ -291,7 +291,6 @@ body {
 
 
 /* RELATÓRIOS - PADRÃO */
-
 .linha-relatorio {
   display: grid;
   grid-template-columns: 1.5fr 2fr 2.5fr;
