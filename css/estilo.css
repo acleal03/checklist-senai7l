@@ -513,3 +513,15 @@ body {
 #listaAmbientes{
   color: white;
 }
+
+/* ADMIN - AÇÕES DO AMBIENTE (Editar / Excluir) */
+.acoes-ambiente {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px; /* bem próximo do texto */
+}
+
+/* Espaçamento ENTRE ambientes */
+#listaAmbientes .card {
+  margin-bottom: 22px;
+}

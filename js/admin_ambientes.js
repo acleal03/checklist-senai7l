@@ -35,7 +35,7 @@ async function listarAmbientes() {
       <strong>${ambiente.codigo}</strong><br>
       <span>${ambiente.descricao || ""}</span>
 
-      <div style="display:flex; gap:15px;">
+      <div class="acoes-ambiente">
         <button class="botao" onclick="editarAmbiente('${ambiente.id}', '${ambiente.codigo}', '${ambiente.descricao || ""}')">
           ✏️ Editar
         </button>
