@@ -14,11 +14,30 @@
 /* ---------- TÍTULO (DESKTOP) ---------- */
 .login-titulo {
   text-align: center;
-  font-size: 2rem;
   color: #38bdf8;
   margin-bottom: 30px;
   letter-spacing: 1px;
-  line-height: 1.3;
+}
+
+.login-titulo span {
+  display: block;
+}
+
+.login-titulo .linha-1 {
+  font-size: 2.1rem;
+  font-weight: 700;
+}
+
+.login-titulo .linha-2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.login-titulo .linha-3 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-top: 10px;
 }
 
 /* ---------- CAMPOS ---------- */
@@ -76,22 +95,25 @@
   color: #94a3b8;
 }
 
-/* AJUSTES EXCLUSIVOS PARA CELULAR */
-
+/* =================================================
+   📱 AJUSTES SOMENTE PARA CELULAR
+   ================================================= */
 @media (max-width: 480px) {
 
   .login-container {
     padding: 26px 22px;
   }
 
-  .login-titulo {
-    font-size: 1.5rem;
-    line-height: 1.4;
+  .login-titulo .linha-1 {
+    font-size: 1.6rem;
   }
 
-  /* Quebra organizada do título no celular */
-  .login-titulo span {
-    display: block;
+  .login-titulo .linha-2 {
+    font-size: 1.5rem;
+  }
+
+  .login-titulo .linha-3 {
+    font-size: 1.3rem;
   }
 
 }
