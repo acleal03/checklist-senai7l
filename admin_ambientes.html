@@ -21,17 +21,33 @@
 
   <div class="card">
 
-    <div class="linha-labels">
-      <div class="label-col codigo">Código do Ambiente</div>
-      <div class="label-col descricao">Descrição do Ambiente</div>
+    <!-- GRID DE FORMULÁRIO -->
+    <div class="form-admin-grid">
+
+      <!-- CÓDIGO -->
+      <div class="form-group codigo">
+        <label for="codigo">Código do Ambiente</label>
+        <input
+          id="codigo"
+          maxlength="8"
+          class="input-admin"
+          placeholder="Ex: 101A"
+        >
+      </div>
+
+      <!-- DESCRIÇÃO -->
+      <div class="form-group descricao">
+        <label for="descricao">Descrição do Ambiente</label>
+        <input
+          id="descricao"
+          class="input-admin"
+          placeholder="Ex: Laboratório de Eletrotécnica"
+        >
+      </div>
+
     </div>
 
-    <div class="linha-inputs">
-      <input id="codigo" maxlength="8" class="input-admin codigo" placeholder="Ex: 101A">
-      <input id="descricao" class="input-admin descricao" placeholder="Ex: Laboratório">
-    </div>
-
-    <button class="botao" style="margin-top:28px;" onclick="salvarAmbiente()">
+    <button class="botao botao-salvar" onclick="salvarAmbiente()">
       💾 Salvar Ambiente
     </button>
 
