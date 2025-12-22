@@ -1,4 +1,6 @@
 // js/admin_ambientes.js
+console.log("admin_ambientes.js CARREGADO");
+
 
 let ambienteEditando = null;
 
