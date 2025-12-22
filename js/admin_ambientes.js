@@ -1,76 +1,109 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <title>Administração de Ambientes</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+// js/admin_ambientes.js
 
-  <link rel="stylesheet" href="css/estilo.css">
-</head>
-<body>
+let ambienteEditando = null;
 
-<script>
-  if (!sessionStorage.getItem("usuario_id") || sessionStorage.getItem("perfil") !== "admin") {
-    window.location.href = "ambientes.html";
+document.addEventListener("DOMContentLoaded", () => {
+  carregarAmbientes();
+});
+
+async function carregarAmbientes() {
+  const { data, error } = await window.supabaseClient
+    .from("ambientes")
+    .select("*")
+    .order("codigo", { ascending: true });
+
+  if (error) {
+    alert("Erro ao carregar ambientes");
+    return;
   }
-</script>
 
-<div class="container">
+  const lista = document.getElementById("listaAmbientes");
+  lista.innerHTML = "";
 
-  <div class="titulo">Administração de Ambientes</div>
+  data.forEach(ambiente => {
+    const div = document.createElement("div");
+    div.className = "card";
 
-  <!-- FORMULÁRIO -->
-  <div class="card">
+    div.innerHTML = `
+      <strong>${ambiente.codigo}</strong><br>
+      ${ambiente.descricao || ""}<br><br>
 
-    <!-- LINHA DOS INPUTS -->
-    <div style="display:flex; gap:20px; align-items:flex-end;">
+      <button class="botao" onclick="editarAmbiente('${ambiente.id}', '${ambiente.codigo}', '${ambiente.descricao || ""}')">✏️ Editar</button>
+      <button class="botao botao-perigo" onclick="excluirAmbiente('${ambiente.id}')">🗑️ Excluir</button>
+    `;
 
-      <!-- CÓDIGO -->
-      <div class="campo" style="flex:0 0 140px;">
-        <label>Código do Ambiente</label>
-        <input
-          type="text"
-          id="codigo"
-          maxlength="8"
-          placeholder="Ex: 101A"
-        >
-      </div>
+    lista.appendChild(div);
+  });
+}
 
-      <!-- DESCRIÇÃO -->
-      <div class="campo" style="flex:1;">
-        <label>Descrição do Ambiente</label>
-        <input
-          type="text"
-          id="descricao"
-          placeholder="Ex: Laboratório de Eletrotécnica"
-        >
-      </div>
+async function salvarAmbiente() {
+  const codigo = document.getElementById("codigo").value.trim();
+  const descricao = document.getElementById("descricao").value.trim();
 
-    </div>
+  if (!codigo) {
+    alert("Informe o código do ambiente.");
+    return;
+  }
 
-    <!-- BOTÃO SALVAR -->
-    <button class="botao" style="margin-top:25px;" onclick="salvarAmbiente()">
-      💾 Salvar Ambiente
-    </button>
+  let result;
 
-  </div>
+  if (ambienteEditando) {
+    result = await window.supabaseClient
+      .from("ambientes")
+      .update({ codigo, descricao })
+      .eq("id", ambienteEditando);
+  } else {
+    result = await window.supabaseClient
+      .from("ambientes")
+      .insert([{ codigo, descricao }]);
+  }
 
-  <!-- LISTA DE AMBIENTES -->
-  <div id="listaAmbientes"></div>
+  if (result.error) {
+    alert("Erro ao salvar ambiente.");
+    return;
+  }
 
-  <!-- AÇÕES -->
-  <div style="display:flex; justify-content:space-between; gap:20px; margin-top:30px;">
-    <button class="botao botao-voltar" onclick="voltarAdmin()">⬅ Voltar</button>
-    <button class="botao botao-sair" onclick="sairSistema()">🚪 Sair</button>
-  </div>
+  document.getElementById("codigo").value = "";
+  document.getElementById("descricao").value = "";
+  ambienteEditando = null;
 
-  <div class="rodape">
-    Desenvolvido por <strong>acleal03</strong>
-  </div>
+  carregarAmbientes();
 
-</div>
+  // FLUXO INTELIGENTE
+  if (confirm("Ambiente salvo com sucesso.\nDeseja cadastrar itens para este ambiente agora?")) {
+    // redireciona já com ambiente selecionado
+    sessionStorage.setItem("ambiente_codigo_admin", codigo);
+    window.location.href = "admin_itens.html";
+  }
+}
 
-<script src="js/admin_ambientes.js"></script>
+function editarAmbiente(id, codigo, descricao) {
+  ambienteEditando = id;
+  document.getElementById("codigo").value = codigo;
+  document.getElementById("descricao").value = descricao;
+}
 
-</body>
-</html>
+async function excluirAmbiente(id) {
+  if (!confirm("Confirma exclusão do ambiente?")) return;
+
+  const { error } = await window.supabaseClient
+    .from("ambientes")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    alert("Não foi possível excluir o ambiente.");
+    return;
+  }
+
+  carregarAmbientes();
+}
+
+function voltarAdmin() {
+  window.location.href = "admin.html";
+}
+
+function sairSistema() {
+  sessionStorage.clear();
+  window.location.href = "index.html";
+}
