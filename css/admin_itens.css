@@ -1,0 +1,146 @@
+/* ===================================================== */
+/* ADMIN - ITENS DE AMBIENTES (ETAPA C)                   */
+/* ARQUIVO ISOLADO - NÃO AFETA OUTRAS TELAS               */
+/* ===================================================== */
+
+/* CONTAINER INTERNO */
+.admin-itens-container {
+  margin-top: 20px;
+}
+
+/* SELECT DE AMBIENTE */
+.admin-itens-select {
+  margin-bottom: 25px;
+}
+
+.admin-itens-select select {
+  width: 100%;
+  height: 52px;
+  border-radius: 14px;
+  border: 1px solid #334155;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 1.05rem;
+  padding: 0 16px;
+  outline: none;
+}
+
+/* ============================ */
+/* LOCAIS (ARMÁRIO, BANCADA...) */
+/* ============================ */
+
+.linha-locais {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+
+.botao-local {
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* ============================ */
+/* FORMULÁRIO DE ITENS          */
+/* ============================ */
+
+.form-item {
+  background: #020617;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.form-item label {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.form-item input,
+.form-item select {
+  width: 100%;
+  height: 52px;
+  border-radius: 14px;
+  border: 1px solid #334155;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 1.05rem;
+  padding: 0 16px;
+  margin-bottom: 18px;
+  outline: none;
+}
+
+.form-item input::placeholder {
+  color: #64748b;
+}
+
+/* ============================ */
+/* LISTAGEM DE LOCAIS + ITENS   */
+/* ============================ */
+
+.local-bloco {
+  background: #020617;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.local-titulo {
+  color: #38bdf8;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+}
+
+.item-linha {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #1e293b;
+}
+
+.item-linha:last-child {
+  border-bottom: none;
+}
+
+.item-info {
+  color: #e5e7eb;
+}
+
+.item-acoes {
+  display: flex;
+  gap: 8px;
+}
+
+/* ============================ */
+/* RESPONSIVO                   */
+/* ============================ */
+
+@media (max-width: 768px) {
+
+  .linha-locais {
+    gap: 8px;
+  }
+
+  .botao-local {
+    width: 100%;
+  }
+
+  .item-linha {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+}

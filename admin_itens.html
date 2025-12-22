@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Administração - Itens de Ambientes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS GLOBAL + CSS ISOLADO DA ETAPA C -->
+  <link rel="stylesheet" href="css/estilo.css">
+  <link rel="stylesheet" href="css/admin_itens.css">
+</head>
+<body>
+
+<script>
+  // Proteção: apenas admin
+  if (!sessionStorage.getItem("usuario_id") || sessionStorage.getItem("perfil") !== "admin") {
+    window.location.href = "ambientes.html";
+  }
+</script>
+
+<div class="container">
+
+  <div class="titulo">Administração de Itens de Ambientes</div>
+
+  <div class="admin-itens-container">
+
+    <!-- SELEÇÃO DO AMBIENTE -->
+    <div class="admin-itens-select">
+      <label style="color:#fff; font-weight:600; margin-bottom:6px; display:block;">
+        Selecionar Ambiente
+      </label>
+      <select id="selectAmbiente">
+        <option value="">Selecione um ambiente...</option>
+      </select>
+    </div>
+
+    <!-- BOTÕES PARA CRIAR LOCAIS -->
+    <div class="linha-locais" id="botoesLocais" style="display:none;">
+      <button class="botao-local" onclick="criarLocal('ambiente')">+ Itens do Ambiente</button>
+      <button class="botao-local" onclick="criarLocal('armario')">+ Armário</button>
+      <button class="botao-local" onclick="criarLocal('bancada')">+ Bancada</button>
+      <button class="botao-local" onclick="criarLocal('gaveta')">+ Gaveta</button>
+      <button class="botao-local" onclick="criarLocal('estante')">+ Estante</button>
+    </div>
+
+    <!-- FORMULÁRIO DE ITEM -->
+    <div class="form-item" id="formItem" style="display:none;">
+
+      <label>Nome do Item *</label>
+      <input id="nomeItem" placeholder="Ex: Multímetro">
+
+      <label>Quantidade *</label>
+      <input id="quantidadeItem" type="number" min="1" placeholder="Ex: 5">
+
+      <label>Descrição (opcional)</label>
+      <input id="descricaoItem" placeholder="Ex: Com cabos">
+
+      <label>Local</label>
+      <select id="selectLocal"></select>
+
+      <button class="botao" onclick="salvarItem()">💾 Salvar Item</button>
+    </div>
+
+    <!-- LISTAGEM -->
+    <div id="listaLocais"></div>
+
+  </div>
+
+  <div class="linha-acoes">
+    <button class="botao botao-voltar" onclick="window.location.href='admin.html'">⬅ Voltar</button>
+  </div>
+
+  <div class="rodape">
+    Desenvolvido por <strong>acleal03</strong>
+  </div>
+
+</div>
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/admin_itens.js"></script>
+
+</body>
+</html>
