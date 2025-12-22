@@ -1,51 +1,50 @@
 // js/admin_ambientes.js
 
-document.addEventListener("DOMContentLoaded", () => {
+async function salvarAmbiente() {
 
-    const form = document.getElementById("formAmbiente");
     const inputCodigo = document.getElementById("codigo");
     const inputDescricao = document.getElementById("descricao");
 
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
+    if (!inputCodigo || !inputDescricao) {
+        alert("Campos não encontrados.");
+        return;
+    }
 
-        const codigo = inputCodigo.value.trim().toUpperCase();
-        const descricao = inputDescricao.value.trim();
+    const codigo = inputCodigo.value.trim().toUpperCase();
+    const descricao = inputDescricao.value.trim();
 
-        if (!codigo || !descricao) {
-            alert("Preencha todos os campos.");
-            return;
-        }
+    if (!codigo || !descricao) {
+        alert("Preencha todos os campos.");
+        return;
+    }
 
-        const { error } = await window.supabaseClient
-            .from("ambientes")
-            .insert([
-                {
-                    codigo: codigo,
-                    descricao: descricao
-                }
-            ]);
+    console.log("Salvando ambiente:", codigo, descricao);
 
-        if (error) {
-            console.error(error);
-            alert("Erro ao salvar ambiente.");
-            return;
-        }
+    const { error } = await supabase
+        .from("ambientes")
+        .insert({
+            codigo,
+            descricao
+        });
 
-        alert("Ambiente cadastrado com sucesso!");
+    if (error) {
+        console.error(error);
+        alert("Erro ao salvar ambiente.");
+        return;
+    }
 
-        // Limpa formulário
-        inputCodigo.value = "";
-        inputDescricao.value = "";
+    alert("Ambiente cadastrado com sucesso!");
 
-        // Pergunta se deseja adicionar itens
-        if (confirm("Deseja cadastrar itens para este ambiente agora?")) {
-            sessionStorage.setItem("novo_ambiente_codigo", codigo);
-            window.location.href = "admin_itens.html";
-        }
-    });
+    // Limpa campos
+    inputCodigo.value = "";
+    inputDescricao.value = "";
 
-});
+    // Fluxo inteligente
+    if (confirm("Deseja cadastrar itens para este ambiente agora?")) {
+        sessionStorage.setItem("ambiente_codigo", codigo);
+        window.location.href = "admin_itens.html";
+    }
+}
 
 function voltarAdmin() {
     window.location.href = "admin.html";
