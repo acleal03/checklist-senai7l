@@ -2,49 +2,43 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>SENAI@107A - Checklist</title>
+  <title>Checklist | SENAI 7L</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/estilo.css">
 </head>
 <body>
 
+<!-- PROTEÇÃO LOGIN -->
+<script>
+  if (!sessionStorage.getItem("usuario_id")) {
+    window.location.href = "index.html";
+  }
+</script>
+
+<!-- PROTEÇÃO AMBIENTE -->
+<script>
+  if (!sessionStorage.getItem("ambiente_id")) {
+    window.location.href = "ambientes.html";
+  }
+</script>
+
 <div class="container">
 
-  <!-- BOTÃO VOLTAR -->
-  <button class="botao botao-voltar" onclick="voltarDashboard()">
-    ⬅ Voltar ao Painel
-  </button>
+  <div class="titulo" id="tituloAmbiente"></div>
 
-  <div class="titulo">Checklist Diário – Laboratório 107A</div>
+  <form id="formChecklist">
+    <div id="listaItens"></div>
 
-  <!-- ITENS DO LABORATÓRIO -->
-  <div class="secao">
-    <h3>Itens do Laboratório</h3>
-    <div id="itensLaboratorio"></div>
-  </div>
+    <div style="margin-top:20px; color: white; font-size: 20px;">
+      <label><strong>Observações Gerais</strong></label>
+      <textarea id="observacoes" rows="4" style="width:100%;"></textarea>
+    </div>
 
-  <!-- ARMÁRIO 01 -->
-  <div class="secao">
-    <h3>Armário nº 01</h3>
-    <div id="armario01"></div>
-  </div>
-
-  <!-- ARMÁRIO 02 -->
-  <div class="secao">
-    <h3>Armário nº 02</h3>
-    <div id="armario02"></div>
-  </div>
-
-  <!-- OBSERVAÇÕES GERAIS -->
-  <div class="secao">
-    <h3>Observações Gerais</h3>
-    <textarea id="observacoesGerais" rows="4"
-      style="width:100%; padding:12px; border-radius:12px;"></textarea>
-  </div>
-
-  <button class="botao" onclick="salvarChecklist()">
-    Salvar Checklist
-  </button>
+    <div style="margin-top:20px; display:flex; gap:10px;">
+      <button type="submit" class="botao">💾 Salvar Checklist</button>
+      <button type="button" class="botao botao-voltar" onclick="voltarDashboard()">⬅ Voltar</button>
+    </div>
+  </form>
 
   <div class="rodape">
     Desenvolvido por <strong>acleal03</strong>
@@ -52,11 +46,9 @@
 
 </div>
 
-<script type="module" src="js/checklist.js"></script>
-<script>
-function voltarDashboard() {
-  window.location.href = "dashboard.html";
-}
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/checklist.js"></script>
+
 </body>
 </html>

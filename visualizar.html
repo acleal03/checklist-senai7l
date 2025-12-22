@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Visualizar Checklist | SENAI 7L</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<!-- PROTEÇÃO LOGIN -->
+<script>
+  if (!sessionStorage.getItem("usuario_id")) {
+    window.location.href = "index.html";
+  }
+</script>
+
+<div class="container">
+
+  <button class="botao botao-voltar" onclick="voltarRelatorios()">
+    ← Voltar aos Relatórios
+  </button>
+
+  <div class="titulo">Visualização de Checklist</div>
+
+  <!-- CABEÇALHO (MANTIDO) -->
+  <div id="infoChecklist"></div>
+
+  <!-- ITENS SIMPLES -->
+  <div class="secao-itens">
+    <h3>Itens do Laboratório</h3>
+    <div id="listaItens"></div>
+  </div>
+
+  <div class="rodape">
+    Desenvolvido por <strong>acleal03</strong>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/visualizar.js"></script>
+
+</body>
+</html>

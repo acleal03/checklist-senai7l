@@ -1,238 +1,145 @@
-import { supabase } from "./supabase.js";
+// js/checklist.js
 
-// ===============================
-// LISTAS DE ITENS
-// ===============================
-const itensLaboratorio = [
-  { nome: "Mesas", quantidade: 12 },
-  { nome: "Cadeiras", quantidade: 34 },
-  { nome: "Computadores", quantidade: 33 },
-  { nome: "Mouses", quantidade: 33 },
-  { nome: "Teclados", quantidade: 33 },
-  { nome: "Monitores", quantidade: 34 },
-  { nome: "Datashow", quantidade: 1 },
-  { nome: "Controle Datashow", quantidade: 1 },
-  { nome: "Quadro Branco", quantidade: 1 },
-  { nome: "Tela retrátil", quantidade: 1 },
-  { nome: "Ar condicionado", quantidade: 2 },
-  { nome: "Controle Ar condicionado", quantidade: 1 }
-];
+document.addEventListener("DOMContentLoaded", () => {
 
-const armario01 = [
-  "Certificador de FO (02)",
-  "Switch Dlink (01)",
-  "Switch HP 1920 (01)",
-  "Switch Cisco 1024 (01)"
-];
+    const ambienteId = sessionStorage.getItem("ambiente_id");
+    const ambienteCodigo = sessionStorage.getItem("ambiente_codigo");
+    const ambienteDescricao = sessionStorage.getItem("ambiente_descricao");
+    const usuarioId = sessionStorage.getItem("usuario_id");
 
-const armario02 = [
-  "Testador de cabos de rede FLUKE (01)",
-  "Testadores de cabos de rede genéricos (10)",
-  "Roteador Ubiquiti (02)",
-  "Roteador Unifi (01)",
-  "Caixas de cabo de rede UTP (02)",
-  "Alicates crimpador para cabos de rede",
-  "Alicates de corte diagonal"
-];
+    document.getElementById("tituloAmbiente").textContent =
+        `${ambienteCodigo} - ${ambienteDescricao}`;
 
-// ===============================
-// FUNÇÃO PARA CRIAR CARD
-// ===============================
-function criarCardItem(texto, indice, prefixo) {
-  const card = document.createElement("div");
-  card.className = "card-item";
+    const lista = document.getElementById("listaItens");
+    const form = document.getElementById("formChecklist");
 
-  card.innerHTML = `
-    <div>
-      <div class="item-titulo">${texto}</div>
-    </div>
+    carregarItens();
 
-    <div>
-      <div class="item-status">
-        <label>
-          <input type="radio" name="${prefixo}_${indice}" value="ok" required>
-          OK
-        </label>
-        <label>
-          <input type="radio" name="${prefixo}_${indice}" value="divergente">
-          Divergente
-        </label>
-      </div>
+    async function carregarItens() {
+        const { data, error } = await window.supabaseClient
+            .from("ambiente_itens")
+            .select("id, nome_item, quantidade")
+            .eq("ambiente_id", ambienteId)
+            .order("nome_item");
 
-      <div class="item-observacao">
-        <textarea rows="2"
-          placeholder="Informe a divergência encontrada..."></textarea>
-      </div>
-    </div>
-  `;
+        if (error) {
+            alert("Erro ao carregar itens.");
+            console.error(error);
+            return;
+        }
 
-  const radios = card.querySelectorAll(`input[name="${prefixo}_${indice}"]`);
-  const observacao = card.querySelector("textarea");
+        lista.innerHTML = "";
 
-  radios.forEach(radio => {
-    radio.addEventListener("change", e => {
-      if (e.target.value === "divergente") {
-        observacao.style.display = "block";
-        card.classList.add("divergente");
-      } else {
-        observacao.style.display = "none";
-        card.classList.remove("divergente");
-      }
+        data.forEach(item => {
+            const bloco = document.createElement("div");
+            bloco.className = "card-opcao";
+            bloco.style.textAlign = "left";
+
+            bloco.innerHTML = `
+                <strong>${item.nome_item}</strong> (Qtd: ${item.quantidade})
+
+                <div style="margin-top:8px;">
+                    <label>
+                        <input type="radio" name="item_${item.id}" value="OK" required>
+                        OK
+                    </label>
+                    &nbsp;&nbsp;
+                    <label>
+                        <input type="radio" name="item_${item.id}" value="DIVERGENTE">
+                        Divergente
+                    </label>
+                </div>
+
+                <div class="divergencia" style="display:none; margin-top:8px;">
+                    <textarea
+                        rows="2"
+                        placeholder="Descreva a divergência encontrada"
+                        style="width:100%;"
+                    ></textarea>
+                </div>
+            `;
+
+            const radios = bloco.querySelectorAll("input[type=radio]");
+            const divDivergencia = bloco.querySelector(".divergencia");
+
+            radios.forEach(radio => {
+                radio.addEventListener("change", () => {
+                    if (radio.value === "DIVERGENTE") {
+                        divDivergencia.style.display = "block";
+                    } else {
+                        divDivergencia.style.display = "none";
+                        divDivergencia.querySelector("textarea").value = "";
+                    }
+                });
+            });
+
+            lista.appendChild(bloco);
+        });
+    }
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const observacoesGerais = document.getElementById("observacoes").value;
+
+        const agora = new Date();
+        const dataBr = agora.toLocaleDateString("pt-BR");
+        const horaBr = agora.toLocaleTimeString("pt-BR");
+
+        // Cabeçalho
+        const { data: checklist, error } = await window.supabaseClient
+            .from("checklists")
+            .insert([{
+                usuario_id: usuarioId,
+                ambiente_id: ambienteId,
+                data_br: dataBr,
+                hora_br: horaBr,
+                observacoes: observacoesGerais
+            }])
+            .select()
+            .single();
+
+        if (error) {
+            alert("Erro ao salvar checklist.");
+            return;
+        }
+
+        const checklistId = checklist.id;
+        const itensSalvar = [];
+
+        document.querySelectorAll(".card-opcao").forEach(bloco => {
+            const nomeItem = bloco.querySelector("strong").innerText;
+            const qtd = parseInt(bloco.innerText.match(/Qtd: (\d+)/)[1]);
+
+            const radioMarcado = bloco.querySelector("input[type=radio]:checked");
+            const status = radioMarcado.value;
+
+            const obsItem = bloco.querySelector(".divergencia textarea").value;
+
+            itensSalvar.push({
+                checklist_id: checklistId,
+                nome_item: nomeItem,
+                quantidade: qtd,
+                status: status,
+                observacao: status === "DIVERGENTE" ? obsItem : null
+            });
+        });
+
+        const { error: erroItens } = await window.supabaseClient
+            .from("checklist_itens")
+            .insert(itensSalvar);
+
+        if (erroItens) {
+            alert("Checklist salvo, mas erro nos itens.");
+            console.error(erroItens);
+            return;
+        }
+
+        alert("Checklist salvo com sucesso!");
+        window.location.href = "dashboard.html";
     });
-  });
+});
 
-  return card;
+function voltarDashboard() {
+    window.location.href = "dashboard.html";
 }
-
-// ===============================
-// RENDERIZAÇÃO
-// ===============================
-const divLaboratorio = document.getElementById("itensLaboratorio");
-const divArmario01 = document.getElementById("armario01");
-const divArmario02 = document.getElementById("armario02");
-
-itensLaboratorio.forEach((item, i) => {
-  divLaboratorio.appendChild(
-    criarCardItem(`${item.nome} (${item.quantidade})`, i, "lab")
-  );
-});
-
-armario01.forEach((item, i) => {
-  divArmario01.appendChild(
-    criarCardItem(item, i, "arm1")
-  );
-});
-
-armario02.forEach((item, i) => {
-  divArmario02.appendChild(
-    criarCardItem(item, i, "arm2")
-  );
-});
-
-// ===============================
-// SALVAR CHECKLIST NO BANCO
-// ===============================
-async function salvarChecklist() {
-
-  const { data: sessao } = await supabase.auth.getSession();
-  if (!sessao.session) {
-    alert("Usuário não autenticado.");
-    return;
-  }
-
-  const usuarioId = sessao.session.user.id;
-  const dataHoje = new Date().toISOString().split("T")[0];
-
-  // ===============================
-  // CRIAR CHECKLIST
-  // ===============================
-  const { data: checklist, error } = await supabase
-    .from("checklists")
-    .insert({
-      data_checklist: dataHoje,
-      usuario_id: usuarioId,
-      observacoes_gerais:
-        document.getElementById("observacoesGerais").value
-    })
-    .select()
-    .single();
-
-  if (error) {
-    alert("Erro ao salvar checklist.");
-    console.error(error);
-    return;
-  }
-
-  const checklistId = checklist.id;
-
-  // ===============================
-  // SALVAR ITENS DO LABORATÓRIO
-  // ===============================
-  const itensLaboratorioRegistros = [];
-
-  for (let i = 0; i < itensLaboratorio.length; i++) {
-
-    const radios = document.querySelectorAll(`input[name="lab_${i}"]`);
-    const selecionado = [...radios].find(r => r.checked);
-    if (!selecionado) continue;
-
-    const observacao =
-      radios[0]
-        .closest(".card-item")
-        .querySelector("textarea").value;
-
-    itensLaboratorioRegistros.push({
-      checklist_id: checklistId,
-      item: itensLaboratorio[i].nome,
-      quantidade_esperada: itensLaboratorio[i].quantidade,
-      status: selecionado.value,
-      observacao: observacao || null
-    });
-  }
-
-  if (itensLaboratorioRegistros.length > 0) {
-    const { error } = await supabase
-      .from("checklist_itens")
-      .insert(itensLaboratorioRegistros);
-
-    if (error) {
-      console.error(error);
-      alert("Erro ao salvar itens do laboratório.");
-      return;
-    }
-  }
-
-  // ===============================
-  // FUNÇÃO GENÉRICA PARA ARMÁRIOS
-  // ===============================
-  async function salvarItensArmario(lista, prefixo, tabela) {
-
-    const registros = [];
-
-    for (let i = 0; i < lista.length; i++) {
-
-      const radios = document.querySelectorAll(
-        `input[name="${prefixo}_${i}"]`
-      );
-
-      const selecionado = [...radios].find(r => r.checked);
-      if (!selecionado) continue;
-
-      const observacao =
-        radios[0]
-          .closest(".card-item")
-          .querySelector("textarea").value;
-
-      registros.push({
-        checklist_id: checklistId,
-        item: lista[i],
-        status: selecionado.value,
-        observacao: observacao || null
-      });
-    }
-
-    if (registros.length > 0) {
-      const { error } = await supabase
-        .from(tabela)
-        .insert(registros);
-
-      if (error) {
-        console.error(error);
-        alert(`Erro ao salvar ${tabela}`);
-      }
-    }
-  }
-
-  // ===============================
-  // SALVAR ARMÁRIOS
-  // ===============================
-  await salvarItensArmario(armario01, "arm1", "checklist_armario01");
-  await salvarItensArmario(armario02, "arm2", "checklist_armario02");
-
-  alert("Checklist salvo com sucesso!");
-  window.location.href = "dashboard.html";
-}
-
-
-
-window.salvarChecklist = salvarChecklist;

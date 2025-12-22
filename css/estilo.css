@@ -1,6 +1,4 @@
-/* ========================================
-   SENAI@107A - ESTILO PREMIUM ORGANIZADO
-======================================== */
+/* SENAI@107A - ESTILO GERAL */
 
 * {
   margin: 0;
@@ -147,9 +145,8 @@ body {
 }
 
 
-/* ===============================
-   RELATÓRIOS – AJUSTES VISUAIS
-================================ */
+/* RELATÓRIOS – AJUSTES VISUAIS */
+
 
 .tabela-relatorios table {
   width: 100%;
@@ -195,9 +192,8 @@ body {
   background: linear-gradient(135deg, #dc2626, #991b1b);
 }
 
-/* ===============================
-   DESTAQUE DE DIVERGÊNCIA
-================================ */
+/* DESTAQUE DE DIVERGÊNCIA */
+
 
 .card-item.divergente {
   border: 2px solid #dc2626;
@@ -207,3 +203,180 @@ body {
 .card-item.divergente .item-titulo {
   color: #7f1d1d;
 }
+
+
+/* GRID DE AMBIENTES - SENAI 7L */
+.grid-ambientes {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px;
+  margin-top: 25px;
+}
+
+.card-ambiente {
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  border-radius: 18px;
+  padding: 20px 10px;
+  text-align: center;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-ambiente:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(14,165,233,0.45);
+}
+
+.ambiente-codigo {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.ambiente-descricao {
+  font-size: 0.85rem;
+  opacity: 0.95;
+  line-height: 1.2;
+}
+
+/* ADMIN */
+.admin-area {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+/* RESPONSIVO */
+@media (max-width: 1400px) {
+  .grid-ambientes {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 1100px) {
+  .grid-ambientes {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-ambientes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-ambientes {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* BARRA SUPERIOR - AMBIENTES   */
+
+.barra-acoes {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.acoes-esquerda,
+.acoes-direita {
+  display: flex;
+  gap: 10px;
+}
+
+
+
+/* RELATÓRIOS - PADRÃO */
+
+.linha-relatorio {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr 2.5fr;
+  gap: 12px;
+  padding: 14px;
+  margin-top: 10px;
+  background: #f8fafc;
+  border-radius: 12px;
+  align-items: center;
+}
+
+.linha-relatorio.cabecalho {
+  background: #1e293b;
+  color: #fff;
+  font-weight: bold;
+}
+
+.col-data,
+.col-usuario,
+.col-acoes {
+  text-align: center;
+}
+
+.col-acoes {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.botao-excluir {
+  background: #dc2626;
+  color: #fff;
+}
+
+
+/* VISUALIZAR CHECKLIST - ITENS */
+.secao-itens {
+  margin-top: 30px;
+}
+
+.secao-itens h3 {
+  color: #38bdf8;
+  margin-bottom: 12px;
+}
+
+.linha-item-simples {
+  font-size: 1rem;
+  margin-bottom: 6px;
+  color: #e5e7eb;
+}
+
+
+/* RELATÓRIOS - AJUSTE MOBILE   */
+/* garante que tudo fique dentro do card */
+.linha-relatorio {
+  overflow-x: auto;
+}
+
+/* impede quebra dos botões */
+.col-acoes {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+/* melhora experiência no celular */
+@media (max-width: 768px) {
+
+  .linha-relatorio {
+    grid-template-columns: 140px 140px minmax(220px, auto);
+  }
+
+  .linha-relatorio::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .linha-relatorio::-webkit-scrollbar-thumb {
+    background: #38bdf8;
+    border-radius: 4px;
+  }
+}
+
+
+/* DIVERGÊNCIA - DESTAQUE VISUAL/VERMELHO */
+.item-divergente {
+  color: #ef4444; /* vermelho */
+  font-weight: 600;
+}
+

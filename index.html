@@ -1,52 +1,62 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>SENAI@107A - Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Checklist SENAI 7L - Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- CSS GLOBAL (inalterado) -->
-  <link rel="stylesheet" href="css/estilo.css">
-
-  <!-- CSS SOMENTE DO LOGIN -->
-  <link rel="stylesheet" href="css/login.css">
+    <!-- CSS EXISTENTE (NÃO ALTERAR) -->
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
 
-<div class="login-container">
+    <div class="login-container">
 
-  <div class="login-titulo">SENAI@107A</div>
+        <div class="login-titulo">
+            SENAI SETE LAGOAS<br>
+            FUNDAÇÃO ZERRENNER
+        </div>
 
-  <div class="login-campo">
-    <label for="email">Usuário</label>
-    <input
-      type="email"
-      id="email"
-      placeholder="usuario@fiemg.com.br"
-      autocomplete="username"
-    >
-  </div>
+        <form id="loginForm">
 
-  <div class="login-campo">
-    <label for="senha">Senha</label>
-    <input
-      type="password"
-      id="senha"
-      placeholder="Digite sua senha"
-      autocomplete="current-password"
-    >
-  </div>
+            <div class="login-campo">
+                <label for="username">Usuário</label>
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="Digite seu usuário"
+                    autocomplete="off"
+                    required
+                >
+            </div>
 
-  <button class="login-botao" onclick="realizarLogin()">
-    Entrar
-  </button>
+            <div class="login-campo">
+                <label for="senha">Senha</label>
+                <input
+                    type="password"
+                    id="senha"
+                    placeholder="Digite sua senha"
+                    required
+                >
+            </div>
 
-  <div class="login-rodape">
-    Desenvolvido por <strong>acleal03</strong>
-  </div>
+            <button type="submit" class="login-botao">
+                Entrar
+            </button>
 
-</div>
+        </form>
 
-<script type="module" src="js/login.js"></script>
+        <div class="login-rodape">
+            Desenvolvido por <strong>acleal03</strong>
+        </div>
+
+    </div>
+
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/login.js"></script>
+
 </body>
 </html>

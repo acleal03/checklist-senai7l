@@ -2,37 +2,51 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>SENAI@107A - Relatórios</title>
+  <title>Relatórios | SENAI 7L</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="stylesheet" href="css/estilo.css">
-
-  <!-- jsPDF (forma estável) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 </head>
+
+<!-- Biblioteca jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="js/pdf.js"></script>
+
 <body>
+<!-- PROTEÇÃO LOGIN -->
+<script>
+  if (!sessionStorage.getItem("usuario_id")) {
+    window.location.href = "index.html";
+  }
+</script>
+
+<!-- PROTEÇÃO AMBIENTE -->
+<script>
+  if (!sessionStorage.getItem("ambiente_id")) {
+    window.location.href = "ambientes.html";
+  }
+</script>
 
 <div class="container">
 
+  <!-- VOLTAR -->
   <button class="botao botao-voltar" onclick="voltarDashboard()">
-    ⬅ Voltar ao Painel
+    ← Voltar ao Painel
   </button>
 
-  <div class="titulo">Relatórios de Checklist</div>
-
-  <div class="tabela-relatorios">
-    <table>
-      <thead>
-        <tr>
-          <th>Data</th>
-          <th>Usuário</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="tabelaRelatorios"></tbody>
-    </table>
+  <!-- TÍTULO -->
+  <div class="titulo" id="tituloAmbiente">
+    Relatórios de Checklist
   </div>
+
+  <!-- CABEÇALHO DA TABELA -->
+  <div class="linha-relatorio cabecalho">
+    <div class="col-data">Data</div>
+    <div class="col-usuario">Usuário</div>
+    <div class="col-acoes">Ações</div>
+  </div>
+
+  <!-- LISTA -->
+  <div id="listaRelatorios"></div>
 
   <div class="rodape">
     Desenvolvido por <strong>acleal03</strong>
@@ -40,11 +54,13 @@
 
 </div>
 
-<script type="module" src="js/relatorios.js"></script>
-<script>
-function voltarDashboard() {
-  window.location.href = "dashboard.html";
-}
-</script>
+  <!-- PDF -->
+<script src="js/pdf.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/relatorios.js"></script>
+
 </body>
 </html>

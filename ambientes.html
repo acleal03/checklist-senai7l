@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Ambientes | Checklist SENAI 7L</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<!-- PROTEÇÃO LOGIN -->
+<script>
+    if (!sessionStorage.getItem("usuario_id")) {
+        window.location.href = "index.html";
+    }
+</script>
+
+<div class="container">
+
+    <div class="titulo">Selecione o Ambiente</div>
+
+    <!-- BARRA SUPERIOR: ADMIN | SAIR -->
+    <div class="barra-acoes">
+
+        <!-- ADMIN (somente admin) -->
+        <div class="acoes-esquerda">
+            <button
+                id="btnAdmin"
+                class="botao botao-admin"
+                onclick="abrirAdmin()"
+                style="display:none;"
+            >
+                ⚙️ Admin
+            </button>
+        </div>
+
+        <!-- SAIR -->
+        <div class="acoes-direita">
+            <button
+                class="botao botao-voltar"
+                onclick="realizarLogoff()"
+            >
+                🚪 Sair
+            </button>
+        </div>
+
+    </div>
+
+    <!-- GRID DE AMBIENTES -->
+    <div id="gridAmbientes" class="grid-ambientes"></div>
+
+    <div class="rodape">
+        Desenvolvido por <strong>acleal03</strong>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/ambientes.js"></script>
+
+<script>
+    function realizarLogoff() {
+        sessionStorage.clear();
+        window.location.href = "index.html";
+    }
+</script>
+
+</body>
+</html>

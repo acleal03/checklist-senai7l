@@ -2,23 +2,42 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>SENAI@107A - Painel Principal</title>
+  <title>SENAI 7L - Painel Principal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/estilo.css">
 </head>
 <body>
 
+<!-- PROTEÇÃO LOGIN -->
+<script>
+  if (!sessionStorage.getItem("usuario_id")) {
+    window.location.href = "index.html";
+  }
+</script>
+
+<!-- PROTEÇÃO AMBIENTE -->
+<script>
+  if (!sessionStorage.getItem("ambiente_id")) {
+    window.location.href = "ambientes.html";
+  }
+</script>
+
 <div class="container">
 
-  <div class="titulo">SENAI@107A</div>
+  <!-- TÍTULO DO AMBIENTE -->
+  <div class="titulo" id="tituloAmbiente"></div>
 
-  <!-- AÇÕES PRINCIPAIS -->
+  <!-- AÇÕES -->
   <div class="card-opcao" onclick="irChecklist()">
     📋 Fazer Checklist
   </div>
 
   <div class="card-opcao" onclick="irRelatorios()">
     📄 Relatórios
+  </div>
+
+  <div class="card-opcao" onclick="voltarAmbientes()">
+    ⬅ Voltar
   </div>
 
   <!-- LOGOFF -->
@@ -32,16 +51,38 @@
 
 </div>
 
-<script type="module">
-  import { supabase } from "./js/supabase.js";
+<script>
+  // Preencher título do ambiente
+  document.addEventListener("DOMContentLoaded", () => {
+    const codigo = sessionStorage.getItem("ambiente_codigo");
+    const descricao = sessionStorage.getItem("ambiente_descricao");
 
-  window.realizarLogoff = async function () {
-    await supabase.auth.signOut();
+    const titulo = document.getElementById("tituloAmbiente");
+    if (titulo) {
+      titulo.textContent = `${codigo} - ${descricao}`;
+    }
+  });
+
+  // Navegação
+  function irChecklist() {
+    window.location.href = "checklist.html";
+  }
+
+  function irRelatorios() {
+    window.location.href = "relatorios.html";
+  }
+
+  function voltarAmbientes() {
+    sessionStorage.removeItem("ambiente_id");
+    sessionStorage.removeItem("ambiente_codigo");
+    sessionStorage.removeItem("ambiente_descricao");
+    window.location.href = "ambientes.html";
+  }
+
+  function realizarLogoff() {
+    sessionStorage.clear();
     window.location.href = "index.html";
-  };
-
-  window.irChecklist = () => window.location.href = "checklist.html";
-  window.irRelatorios = () => window.location.href = "relatorios.html";
+  }
 </script>
 
 </body>
