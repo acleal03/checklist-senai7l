@@ -22,13 +22,11 @@
   <!-- FORMULÁRIO -->
   <div class="card">
 
-    <!-- LABELS -->
     <div class="linha-labels">
       <div class="label-col codigo">Código do Ambiente</div>
       <div class="label-col descricao">Descrição do Ambiente</div>
     </div>
 
-    <!-- INPUTS -->
     <div class="linha-inputs">
       <input
         type="text"
@@ -46,12 +44,14 @@
       >
     </div>
 
-    <!-- BOTÃO -->
-  <button class="botao" style="margin-top:28px;" onclick="salvarAmbiente()">
-  💾 Salvar Ambiente
-</button>
+    <button class="botao" style="margin-top:28px;" onclick="salvarAmbiente()">
+      💾 Salvar Ambiente
+    </button>
 
   </div>
+
+  <!-- LISTA DE AMBIENTES -->
+  <div id="listaAmbientes"></div>
 
   <!-- AÇÕES -->
   <div class="linha-acoes">
@@ -65,6 +65,11 @@
 
 </div>
 
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+
+<!-- SCRIPT -->
 <script src="js/admin_ambientes.js"></script>
 
 </body>

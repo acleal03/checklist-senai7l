@@ -1,56 +1,121 @@
 // js/admin_ambientes.js
 
+let ambienteEditando = null;
+
+document.addEventListener("DOMContentLoaded", () => {
+  listarAmbientes();
+});
+
+async function listarAmbientes() {
+  const { data, error } = await supabase
+    .from("ambientes")
+    .select("*")
+    .order("codigo", { ascending: true });
+
+  if (error) {
+    alert("Erro ao carregar ambientes.");
+    console.error(error);
+    return;
+  }
+
+  const lista = document.getElementById("listaAmbientes");
+  lista.innerHTML = "";
+
+  if (data.length === 0) {
+    lista.innerHTML = `<p style="text-align:center; color:#94a3b8;">Nenhum ambiente cadastrado.</p>`;
+    return;
+  }
+
+  data.forEach(ambiente => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <strong>${ambiente.codigo}</strong><br>
+      <span>${ambiente.descricao || ""}</span>
+      <div style="margin-top:15px; display:flex; gap:10px;">
+        <button class="botao" onclick="editarAmbiente('${ambiente.id}', '${ambiente.codigo}', '${ambiente.descricao || ""}')">✏️ Editar</button>
+        <button class="botao botao-perigo" onclick="excluirAmbiente('${ambiente.id}')">🗑️ Excluir</button>
+      </div>
+    `;
+
+    lista.appendChild(card);
+  });
+}
+
 async function salvarAmbiente() {
+  const inputCodigo = document.getElementById("codigo");
+  const inputDescricao = document.getElementById("descricao");
 
-    const inputCodigo = document.getElementById("codigo");
-    const inputDescricao = document.getElementById("descricao");
+  const codigo = inputCodigo.value.trim().toUpperCase();
+  const descricao = inputDescricao.value.trim();
 
-    if (!inputCodigo || !inputDescricao) {
-        alert("Campos não encontrados.");
-        return;
-    }
+  if (!codigo || !descricao) {
+    alert("Preencha todos os campos.");
+    return;
+  }
 
-    const codigo = inputCodigo.value.trim().toUpperCase();
-    const descricao = inputDescricao.value.trim();
+  let result;
 
-    if (!codigo || !descricao) {
-        alert("Preencha todos os campos.");
-        return;
-    }
+  if (ambienteEditando) {
+    result = await supabase
+      .from("ambientes")
+      .update({ codigo, descricao })
+      .eq("id", ambienteEditando);
+  } else {
+    result = await supabase
+      .from("ambientes")
+      .insert({ codigo, descricao });
+  }
 
-    console.log("Salvando ambiente:", codigo, descricao);
+  if (result.error) {
+    alert("Erro ao salvar ambiente.");
+    console.error(result.error);
+    return;
+  }
 
-    const { error } = await supabase
-        .from("ambientes")
-        .insert({
-            codigo,
-            descricao
-        });
+  alert("Ambiente salvo com sucesso!");
 
-    if (error) {
-        console.error(error);
-        alert("Erro ao salvar ambiente.");
-        return;
-    }
+  inputCodigo.value = "";
+  inputDescricao.value = "";
+  ambienteEditando = null;
 
-    alert("Ambiente cadastrado com sucesso!");
+  listarAmbientes();
 
-    // Limpa campos
-    inputCodigo.value = "";
-    inputDescricao.value = "";
+  if (confirm("Deseja cadastrar itens para este ambiente agora?")) {
+    sessionStorage.setItem("ambiente_codigo", codigo);
+    window.location.href = "admin_itens.html";
+  }
+}
 
-    // Fluxo inteligente
-    if (confirm("Deseja cadastrar itens para este ambiente agora?")) {
-        sessionStorage.setItem("ambiente_codigo", codigo);
-        window.location.href = "admin_itens.html";
-    }
+function editarAmbiente(id, codigo, descricao) {
+  ambienteEditando = id;
+  document.getElementById("codigo").value = codigo;
+  document.getElementById("descricao").value = descricao;
+}
+
+async function excluirAmbiente(id) {
+  if (!confirm("Confirma exclusão deste ambiente?")) return;
+
+  const { error } = await supabase
+    .from("ambientes")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    alert("Erro ao excluir ambiente.");
+    console.error(error);
+    return;
+  }
+
+  listarAmbientes();
 }
 
 function voltarAdmin() {
-    window.location.href = "admin.html";
+  window.location.href = "admin.html";
 }
 
 function sairSistema() {
-    sessionStorage.clear();
-    window.location.href = "index.html";
+  sessionStorage.clear();
+  window.location.href = "index.html";
 }
