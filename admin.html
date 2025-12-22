@@ -20,28 +20,38 @@
 
   <div class="titulo">Painel Administrativo</div>
 
-  <!-- CARDS ADMIN -->
-  <div class="card-opcao" onclick="irAmbientesAdmin()">
-    🏢 Ambientes
+  <!-- LINHA 1 - CARDS ADMIN -->
+  <div style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap;">
+
+    <div class="card-opcao" style="flex:1; min-width:220px;" onclick="irAmbientesAdmin()">
+      🏢 Ambientes
+    </div>
+
+    <div class="card-opcao" style="flex:1; min-width:220px;" onclick="irItensAmbientes()">
+      🧰 Itens de Ambientes
+    </div>
+
+    <div class="card-opcao" style="flex:1; min-width:220px;" onclick="irUsuarios()">
+      👥 Usuários
+    </div>
+
   </div>
 
-  <div class="card-opcao" onclick="irItensAmbientes()">
-    🧰 Itens de Ambientes
+  <!-- ESPAÇO ENTRE LINHAS -->
+  <div style="height:30px;"></div>
+
+  <!-- LINHA 2 - VOLTAR / SAIR -->
+  <div style="display:flex; justify-content:space-between; gap:20px;">
+
+    <button class="botao botao-voltar" onclick="voltarAmbientes()" style="flex:1;">
+      ⬅ Voltar
+    </button>
+
+    <button class="botao botao-sair" onclick="sairSistema()" style="flex:1;">
+      Sair
+    </button>
+
   </div>
-
-  <div class="card-opcao" onclick="irUsuarios()">
-    👥 Usuários
-  </div>
-
-  <!-- VOLTAR -->
-  <button class="botao botao-voltar" onclick="voltarAmbientes()">
-    ⬅ Voltar
-  </button>
-
-  <!-- SAIR -->
-  <button class="botao botao-sair" onclick="sairSistema()">
-    Sair
-  </button>
 
   <div class="rodape">
     Desenvolvido por <strong>acleal03</strong>
