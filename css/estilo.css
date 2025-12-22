@@ -216,7 +216,7 @@ body {
 .card-ambiente {
   background: linear-gradient(135deg, #0ea5e9, #0284c7);
   border-radius: 18px;
-  padding: 20px 10px;
+  
   text-align: center;
   color: #fff;
   cursor: pointer;
