@@ -1,7 +1,6 @@
 // js/admin_ambientes.js
 console.log("admin_ambientes.js CARREGADO");
 
-
 let ambienteEditando = null;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -9,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function listarAmbientes() {
-  const { data, error } = await supabase
+  const { data, error } = await window.supabaseClient
     .from("ambientes")
     .select("*")
     .order("codigo", { ascending: true });
@@ -23,7 +22,7 @@ async function listarAmbientes() {
   const lista = document.getElementById("listaAmbientes");
   lista.innerHTML = "";
 
-  if (data.length === 0) {
+  if (!data || data.length === 0) {
     lista.innerHTML = `<p style="text-align:center; color:#94a3b8;">Nenhum ambiente cadastrado.</p>`;
     return;
   }
@@ -35,9 +34,14 @@ async function listarAmbientes() {
     card.innerHTML = `
       <strong>${ambiente.codigo}</strong><br>
       <span>${ambiente.descricao || ""}</span>
+
       <div style="margin-top:15px; display:flex; gap:10px;">
-        <button class="botao" onclick="editarAmbiente('${ambiente.id}', '${ambiente.codigo}', '${ambiente.descricao || ""}')">✏️ Editar</button>
-        <button class="botao botao-perigo" onclick="excluirAmbiente('${ambiente.id}')">🗑️ Excluir</button>
+        <button class="botao" onclick="editarAmbiente('${ambiente.id}', '${ambiente.codigo}', '${ambiente.descricao || ""}')">
+          ✏️ Editar
+        </button>
+        <button class="botao botao-perigo" onclick="excluirAmbiente('${ambiente.id}')">
+          🗑️ Excluir
+        </button>
       </div>
     `;
 
@@ -60,12 +64,12 @@ async function salvarAmbiente() {
   let result;
 
   if (ambienteEditando) {
-    result = await supabase
+    result = await window.supabaseClient
       .from("ambientes")
       .update({ codigo, descricao })
       .eq("id", ambienteEditando);
   } else {
-    result = await supabase
+    result = await window.supabaseClient
       .from("ambientes")
       .insert({ codigo, descricao });
   }
@@ -99,7 +103,7 @@ function editarAmbiente(id, codigo, descricao) {
 async function excluirAmbiente(id) {
   if (!confirm("Confirma exclusão deste ambiente?")) return;
 
-  const { error } = await supabase
+  const { error } = await window.supabaseClient
     .from("ambientes")
     .delete()
     .eq("id", id);
