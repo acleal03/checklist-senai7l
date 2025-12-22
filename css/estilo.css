@@ -380,3 +380,77 @@ body {
   font-weight: 600;
 }
 
+
+/* ADMIN - FORMULÁRIO AMBIENTES */
+.linha-labels {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 8px;
+}
+
+.label-col {
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.label-col.codigo {
+  width: 160px;
+}
+
+.label-col.descricao {
+  flex: 1;
+}
+
+.linha-inputs {
+  display: flex;
+  gap: 20px;
+}
+
+.input-admin {
+  height: 52px;
+  border-radius: 14px;
+  border: 1px solid #334155;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 1.05rem;
+  padding: 0 16px;
+  outline: none;
+}
+
+.input-admin::placeholder {
+  color: #64748b;
+}
+
+.input-admin:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 2px rgba(56,189,248,0.35);
+}
+
+.input-admin.codigo {
+  width: 160px;
+}
+
+.input-admin.descricao {
+  flex: 1;
+}
+
+.linha-acoes {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .linha-labels,
+  .linha-inputs {
+    flex-direction: column;
+  }
+
+  .label-col.codigo,
+  .input-admin.codigo {
+    width: 100%;
+  }
+}
