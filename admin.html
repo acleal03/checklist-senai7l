@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Administração - Checklist SENAI 7L</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<script>
+  // Proteção: apenas admin
+  if (!sessionStorage.getItem("usuario_id") || sessionStorage.getItem("perfil") !== "admin") {
+    window.location.href = "ambientes.html";
+  }
+</script>
+
+<div class="container">
+
+  <div class="titulo">Painel Administrativo</div>
+
+  <!-- CARDS ADMIN -->
+  <div class="card-opcao" onclick="irAmbientesAdmin()">
+    🏢 Ambientes
+  </div>
+
+  <div class="card-opcao" onclick="irItensAmbientes()">
+    🧰 Itens de Ambientes
+  </div>
+
+  <div class="card-opcao" onclick="irUsuarios()">
+    👥 Usuários
+  </div>
+
+  <!-- VOLTAR -->
+  <button class="botao botao-voltar" onclick="voltarAmbientes()">
+    ⬅ Voltar
+  </button>
+
+  <!-- SAIR -->
+  <button class="botao botao-sair" onclick="sairSistema()">
+    Sair
+  </button>
+
+  <div class="rodape">
+    Desenvolvido por <strong>acleal03</strong>
+  </div>
+
+</div>
+
+<script src="js/admin.js"></script>
+
+</body>
+</html>

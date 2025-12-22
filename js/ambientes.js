@@ -6,7 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const grid = document.getElementById("gridAmbientes");
     const btnAdmin = document.getElementById("btnAdmin");
 
-    if (perfil === "admin") {
+    // Exibe botão ADMIN apenas para admins
+    if (perfil === "admin" && btnAdmin) {
         btnAdmin.style.display = "inline-block";
     }
 
@@ -16,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const { data, error } = await window.supabaseClient
             .from("ambientes")
             .select("id, codigo, descricao")
-            .order("codigo");
+            .order("codigo", { ascending: true });
 
         if (error) {
             alert("Erro ao carregar ambientes.");
@@ -46,7 +47,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    window.abrirAdmin = function () {
-        alert("Painel ADMIN em desenvolvimento.");
-    };
 });
+
+/* =========================
+   AÇÕES ADMIN
+   ========================= */
+
+function abrirAdmin() {
+    window.location.href = "admin.html";
+}
