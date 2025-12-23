@@ -88,3 +88,11 @@
   border: 1px solid #ef4444;
   display: none;
 }
+
+.card-opcao input[type="radio"]:checked {
+  accent-color: #38bdf8;
+}
+
+.divergencia textarea {
+  border: 2px solid #ef4444;
+}

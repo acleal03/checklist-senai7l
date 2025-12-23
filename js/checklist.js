@@ -159,23 +159,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const checklistId = checklist.id;
     const itensSalvar = [];
 
-    document.querySelectorAll("[name^='item_']").forEach(input => {
-      if (!input.checked) return;
+   document.querySelectorAll("[name^='item_']").forEach(input => {
+    if (!input.checked) return;
 
-      const bloco = input.closest("div");
-      const nomeItem = bloco.querySelector("strong").innerText;
-      const qtd = parseInt(bloco.innerText.match(/\((\d+)\)/)[1]);
-      const status = input.value;
-      const obs = bloco.querySelector("textarea")?.value || null;
+        const bloco = input.closest("div");
+        const nomeItem = bloco.querySelector("strong").innerText;
+        const qtd = parseInt(bloco.innerText.match(/\((\d+)\)/)[1]);
+        const status = input.value;
+        const obsTextarea = bloco.querySelector("textarea");
+        const obs = obsTextarea ? obsTextarea.value.trim() : null;
 
-      itensSalvar.push({
-        checklist_id: checklistId,
-        nome_item: nomeItem,
-        quantidade: qtd,
-        status,
-        observacao: status === "DIVERGENTE" ? obs : null
-      });
+        // 🔴 REGRA: divergente precisa de observação
+        if (status === "DIVERGENTE" && !obs) {
+            alert(`Informe a divergência do item: ${nomeItem}`);
+            obsTextarea.focus();
+            throw new Error("Checklist inválido");
+        }
+
+        itensSalvar.push({
+            checklist_id: checklistId,
+            nome_item: nomeItem,
+            quantidade: qtd,
+            status,
+            observacao: status === "DIVERGENTE" ? obs : null
     });
+});
+
 
     await window.supabaseClient.from("checklist_itens").insert(itensSalvar);
 
