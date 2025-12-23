@@ -1,25 +1,20 @@
-// js/checklist.js
 document.addEventListener("DOMContentLoaded", async () => {
 
   const ambienteId = sessionStorage.getItem("ambiente_id");
   const ambienteCodigo = sessionStorage.getItem("ambiente_codigo");
   const ambienteDescricao = sessionStorage.getItem("ambiente_descricao");
-  const usuarioId = sessionStorage.getItem("usuario_id");
 
   document.getElementById("tituloAmbiente").textContent =
     `${ambienteCodigo} - ${ambienteDescricao}`;
 
   const lista = document.getElementById("listaItens");
 
-  /* ===========================
-     BUSCA LOCAIS + ITENS
-     =========================== */
   const { data: locais, error } = await window.supabaseClient
     .from("locais_ambiente")
     .select(`
       id,
       nome_exibicao,
-      ambiente_itens (
+      ambiente_itens!fk_ambiente_itens_local (
         id,
         nome_item,
         quantidade,
@@ -96,7 +91,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         r.addEventListener("change", () => {
           if (r.value === "DIVERGENTE") {
             divObs.style.display = "block";
-            card.querySelector(`input[name="local_${local.id}"][value="DIVERGENTE"]`).checked = true;
+            card.querySelector(
+              `input[name="local_${local.id}"][value="DIVERGENTE"]`
+            ).checked = true;
           } else {
             divObs.style.display = "none";
             divObs.querySelector("textarea").value = "";
@@ -111,7 +108,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
 });
-
 
 function voltarDashboard() {
   window.location.href = "dashboard.html";
