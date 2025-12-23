@@ -12,8 +12,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const lista = document.getElementById("listaItens");
 
   /* ===============================
-     1️⃣ BUSCAR LOCAIS DO AMBIENTE
-     =============================== */
+     1️⃣ BUSCA LOCAIS
+  =============================== */
   const { data: locais, error: erroLocais } = await window.supabaseClient
     .from("locais_ambiente")
     .select("id, nome_exibicao")
@@ -27,12 +27,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   /* ===============================
-     2️⃣ BUSCAR ITENS DO AMBIENTE
-     =============================== */
+     2️⃣ BUSCA ITENS DO AMBIENTE
+  =============================== */
   const { data: itens, error: erroItens } = await window.supabaseClient
     .from("ambiente_itens")
     .select("id, nome_item, quantidade, descricao, local_id")
-    .eq("ambiente_id", ambienteId);
+    .eq("ambiente_id", ambienteId)
+    .order("nome_item", { ascending: true });
 
   if (erroItens) {
     alert("Erro ao carregar itens");
@@ -41,19 +42,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   /* ===============================
-     3️⃣ AGRUPAR ITENS POR LOCAL
-     =============================== */
-  const mapaItensPorLocal = {};
+     3️⃣ AGRUPA ITENS POR LOCAL
+  =============================== */
+  const itensPorLocal = {};
   itens.forEach(item => {
-    if (!mapaItensPorLocal[item.local_id]) {
-      mapaItensPorLocal[item.local_id] = [];
+    if (!itensPorLocal[item.local_id]) {
+      itensPorLocal[item.local_id] = [];
     }
-    mapaItensPorLocal[item.local_id].push(item);
+    itensPorLocal[item.local_id].push(item);
   });
 
   /* ===============================
-     4️⃣ RENDERIZAÇÃO FINAL
-     =============================== */
+     4️⃣ RENDERIZA CHECKLIST
+  =============================== */
   lista.innerHTML = "";
 
   locais.forEach(local => {
@@ -81,13 +82,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     `;
 
     const itensDiv = card.querySelector(".itens-local");
-    const itensDoLocal = mapaItensPorLocal[local.id] || [];
+    const itensLocal = itensPorLocal[local.id] || [];
 
-    if (itensDoLocal.length === 0) {
-      itensDiv.innerHTML = `<p style="color:#94a3b8;">Nenhum item cadastrado.</p>`;
+    if (itensLocal.length === 0) {
+      itensDiv.innerHTML = `<p style="color:#94a3b8;">Nenhum item neste local.</p>`;
     }
 
-    itensDoLocal.forEach(item => {
+    itensLocal.forEach(item => {
 
       const linha = document.createElement("div");
       linha.style.marginBottom = "12px";
@@ -116,9 +117,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const radios = linha.querySelectorAll(`input[name="item_${item.id}"]`);
       const divObs = linha.querySelector(".divergencia");
 
-      radios.forEach(r => {
-        r.addEventListener("change", () => {
-          if (r.value === "DIVERGENTE") {
+      radios.forEach(radio => {
+        radio.addEventListener("change", () => {
+          if (radio.value === "DIVERGENTE") {
             divObs.style.display = "block";
             card.querySelector(`input[name="local_${local.id}"][value="DIVERGENTE"]`).checked = true;
           } else {
