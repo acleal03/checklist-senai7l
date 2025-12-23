@@ -13,8 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const lista = document.getElementById("listaItens");
   const form = document.getElementById("formChecklist");
 
-  let locais = [];
-
   carregarChecklist();
 
   async function carregarChecklist() {
@@ -39,11 +37,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    locais = data || [];
-    renderizar();
+    renderizar(data || []);
   }
 
-  function renderizar() {
+  function renderizar(locais) {
     lista.innerHTML = "";
 
     locais.forEach(local => {
@@ -53,11 +50,11 @@ document.addEventListener("DOMContentLoaded", () => {
       bloco.style.textAlign = "left";
 
       bloco.innerHTML = `
-        <h3 style="margin-bottom:8px;">${local.nome_exibicao}</h3>
+        <h3>${local.nome_exibicao}</h3>
 
-        <div style="margin-bottom:10px;">
+        <div style="margin-bottom:12px;">
           <label>
-            <input type="radio" name="local_${local.id}" value="OK">
+            <input type="radio" name="local_${local.id}" value="OK" checked>
             OK
           </label>
           &nbsp;&nbsp;
@@ -72,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const itensDiv = bloco.querySelector(".itens-local");
 
-      // ITENS DO LOCAL (SEMPRE VISÍVEIS)
+      // ITENS SEMPRE VISÍVEIS
       local.itens_ambiente.forEach(item => {
 
         const linha = document.createElement("div");
@@ -82,9 +79,9 @@ document.addEventListener("DOMContentLoaded", () => {
           <strong>${item.nome_item}</strong> (${item.quantidade})
           ${item.descricao ? " - " + item.descricao : ""}
 
-          <div style="margin-top:4px;">
+          <div>
             <label>
-              <input type="radio" name="item_${item.id}" value="OK" required>
+              <input type="radio" name="item_${item.id}" value="OK" checked>
               OK
             </label>
             &nbsp;&nbsp;
@@ -95,11 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
 
           <div class="divergencia" style="display:none; margin-top:6px;">
-            <textarea
-              rows="2"
-              placeholder="Descreva a divergência"
-              style="width:100%;"
-            ></textarea>
+            <textarea rows="2" placeholder="Descreva a divergência" style="width:100%;"></textarea>
           </div>
         `;
 
@@ -112,11 +105,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (radio.value === "DIVERGENTE") {
               divObs.style.display = "block";
 
-              // Marca automaticamente o local como divergente
-              bloco.querySelector(
-                `input[name="local_${local.id}"][value="DIVERGENTE"]`
-              ).checked = true;
-
+              // Marca o LOCAL como divergente automaticamente
+              bloco.querySelector(`input[name="local_${local.id}"][value="DIVERGENTE"]`).checked = true;
             } else {
               divObs.style.display = "none";
               divObs.querySelector("textarea").value = "";
@@ -131,9 +121,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===============================
-  // SALVAR CHECKLIST
-  // ===============================
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -154,21 +141,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (error) {
       alert("Erro ao salvar checklist.");
-      console.error(error);
       return;
     }
 
-    const checklistId = checklist.id;
     const itensSalvar = [];
 
-    document.querySelectorAll("[name^='item_']").forEach(input => {
-      if (!input.checked) return;
+    document.querySelectorAll("[name^='item_']:checked").forEach(input => {
 
-      const blocoItem = input.closest("div");
-      const nomeItem = blocoItem.querySelector("strong").innerText;
-      const qtd = parseInt(blocoItem.innerText.match(/\((\d+)\)/)[1]);
+      const bloco = input.closest("div");
+      const nomeItem = bloco.querySelector("strong").innerText;
+      const qtd = parseInt(bloco.innerText.match(/\((\d+)\)/)[1]);
       const status = input.value;
-      const obsTextarea = blocoItem.querySelector("textarea");
+      const obsTextarea = bloco.querySelector("textarea");
       const obs = obsTextarea ? obsTextarea.value.trim() : null;
 
       if (status === "DIVERGENTE" && !obs) {
@@ -178,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       itensSalvar.push({
-        checklist_id: checklistId,
+        checklist_id: checklist.id,
         nome_item: nomeItem,
         quantidade: qtd,
         status,
