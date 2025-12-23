@@ -24,6 +24,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     .eq("ambiente_id", ambienteId)
     .order("nome_exibicao", { ascending: true });
 
+    console.log("LOCAIS COM ITENS:", locais);
+
   if (error) {
     alert("Erro ao carregar checklist");
     console.error(error);
