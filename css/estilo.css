@@ -431,7 +431,7 @@ body {
 }
 
 .input-admin.descricao {
-  flex: 1;
+  width: 460px;
 }
 
 .linha-acoes {
