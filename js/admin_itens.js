@@ -192,24 +192,22 @@ function renderizarLista() {
     const bloco = document.createElement("div");
     bloco.className = "local-bloco";
 
-    // 🔹 CABEÇALHO DO LOCAL (título + excluir)
+    // Cabeçalho do local
     bloco.innerHTML = `
       <div class="local-header">
         <div class="local-titulo">${local.nome_exibicao}</div>
-        ${
-          local.nome_exibicao !== "Itens do Ambiente"
-            ? `<button class="botao botao-perigo botao-local-excluir"
-                 onclick="excluirLocal('${local.id}', ${local.itens_ambiente.length})">
-                 🗑️
-               </button>`
-            : ""
-        }
+        <button
+          class="botao botao-perigo botao-local-excluir"
+          onclick="excluirLocal('${local.id}', ${local.itens_ambiente.length})"
+          title="Excluir local"
+        >
+          🗑️
+        </button>
       </div>
     `;
 
-    // 🔹 ITENS DO LOCAL
+    // Itens do local
     if (local.itens_ambiente && local.itens_ambiente.length > 0) {
-
       local.itens_ambiente.forEach(item => {
         const linha = document.createElement("div");
         linha.className = "item-linha";
@@ -241,7 +239,6 @@ function renderizarLista() {
 
         bloco.appendChild(linha);
       });
-
     } else {
       bloco.innerHTML += `
         <p style="color:#94a3b8; margin-top:8px;">
@@ -295,3 +292,27 @@ async function excluirLocal(localId, totalItens) {
 
   carregarLocais();
 }
+
+async function excluirLocal(localId, totalItens) {
+
+  if (totalItens > 0) {
+    alert("Não é possível excluir este local porque existem itens cadastrados nele.");
+    return;
+  }
+
+  if (!confirm("Confirma exclusão deste local?")) return;
+
+  const { error } = await window.supabaseClient
+    .from("locais_ambiente")
+    .delete()
+    .eq("id", localId);
+
+  if (error) {
+    alert("Erro ao excluir local.");
+    console.error(error);
+    return;
+  }
+
+  carregarLocais();
+}
+
