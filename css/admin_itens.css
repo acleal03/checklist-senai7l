@@ -144,3 +144,17 @@
   }
 
 }
+
+.local-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.botao-local-excluir {
+  width: auto;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+}
+

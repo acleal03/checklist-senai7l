@@ -192,11 +192,24 @@ function renderizarLista() {
     const bloco = document.createElement("div");
     bloco.className = "local-bloco";
 
+    // 🔹 CABEÇALHO DO LOCAL (título + excluir)
     bloco.innerHTML = `
-      <div class="local-titulo">${local.nome_exibicao}</div>
+      <div class="local-header">
+        <div class="local-titulo">${local.nome_exibicao}</div>
+        ${
+          local.nome_exibicao !== "Itens do Ambiente"
+            ? `<button class="botao botao-perigo botao-local-excluir"
+                 onclick="excluirLocal('${local.id}', ${local.itens_ambiente.length})">
+                 🗑️
+               </button>`
+            : ""
+        }
+      </div>
     `;
 
+    // 🔹 ITENS DO LOCAL
     if (local.itens_ambiente && local.itens_ambiente.length > 0) {
+
       local.itens_ambiente.forEach(item => {
         const linha = document.createElement("div");
         linha.className = "item-linha";
@@ -206,16 +219,35 @@ function renderizarLista() {
             ${item.nome_item} (${item.quantidade})
             ${item.descricao ? " - " + item.descricao : ""}
           </div>
+
           <div class="item-acoes">
-            <button class="botao" onclick="editarItem('${item.id}','${item.nome_item}',${item.quantidade},'${item.descricao || ""}','${local.id}')">✏️</button>
-            <button class="botao botao-perigo" onclick="excluirItem('${item.id}')">🗑️</button>
+            <button class="botao"
+              onclick="editarItem(
+                '${item.id}',
+                '${item.nome_item}',
+                ${item.quantidade},
+                '${item.descricao || ""}',
+                '${local.id}'
+              )">
+              ✏️
+            </button>
+
+            <button class="botao botao-perigo"
+              onclick="excluirItem('${item.id}')">
+              🗑️
+            </button>
           </div>
         `;
 
         bloco.appendChild(linha);
       });
+
     } else {
-      bloco.innerHTML += `<p style="color:#94a3b8;">Nenhum item cadastrado.</p>`;
+      bloco.innerHTML += `
+        <p style="color:#94a3b8; margin-top:8px;">
+          Nenhum item cadastrado.
+        </p>
+      `;
     }
 
     lista.appendChild(bloco);
@@ -237,6 +269,29 @@ async function excluirItem(id) {
     .from("itens_ambiente")
     .delete()
     .eq("id", id);
+
+  carregarLocais();
+}
+
+async function excluirLocal(localId, totalItens) {
+
+  if (totalItens > 0) {
+    alert("Não é possível excluir este local porque existem itens cadastrados nele.");
+    return;
+  }
+
+  if (!confirm("Confirma exclusão deste local?")) return;
+
+  const { error } = await window.supabaseClient
+    .from("locais_ambiente")
+    .delete()
+    .eq("id", localId);
+
+  if (error) {
+    alert("Erro ao excluir local.");
+    console.error(error);
+    return;
+  }
 
   carregarLocais();
 }
