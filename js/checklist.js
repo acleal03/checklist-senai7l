@@ -74,16 +74,20 @@ document.addEventListener("DOMContentLoaded", () => {
       const itensDiv = bloco.querySelector(".itens-local");
       const radiosLocal = bloco.querySelectorAll(`input[name="local_${local.id}"]`);
 
-      radiosLocal.forEach(radio => {
-        radio.addEventListener("change", () => {
-          if (radio.value === "DIVERGENTE") {
-            itensDiv.style.display = "block";
-          } else {
-            itensDiv.style.display = "none";
-            itensDiv.querySelectorAll("input[value='DIVERGENTE']").forEach(r => r.checked = false);
-          }
+        radiosItem.forEach(r => {
+            r.addEventListener("change", () => {
+                if (r.value === "DIVERGENTE") {
+                    divObs.style.display = "block";
+
+                    // Marca automaticamente o local como divergente
+                    bloco.querySelector(`input[name="local_${local.id}"][value="DIVERGENTE"]`).checked = true;
+                } else {
+                    divObs.style.display = "none";
+                    divObs.querySelector("textarea").value = "";
+                }
+            });
         });
-      });
+
 
       // ITENS DO LOCAL
       local.itens_ambiente.forEach(item => {
