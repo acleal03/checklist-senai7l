@@ -1,3 +1,4 @@
+// js/checklist.js
 document.addEventListener("DOMContentLoaded", async () => {
 
   const ambienteId = sessionStorage.getItem("ambiente_id");
@@ -10,14 +11,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const lista = document.getElementById("listaItens");
 
-  /* ============================
-     1️⃣ BUSCA LOCAIS
-     ============================ */
+  /* ===============================
+     1️⃣ BUSCAR LOCAIS DO AMBIENTE
+     =============================== */
   const { data: locais, error: erroLocais } = await window.supabaseClient
     .from("locais_ambiente")
     .select("id, nome_exibicao")
     .eq("ambiente_id", ambienteId)
-    .order("nome_exibicao");
+    .order("nome_exibicao", { ascending: true });
 
   if (erroLocais) {
     alert("Erro ao carregar locais");
@@ -25,9 +26,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  /* ============================
-     2️⃣ BUSCA ITENS
-     ============================ */
+  /* ===============================
+     2️⃣ BUSCAR ITENS DO AMBIENTE
+     =============================== */
   const { data: itens, error: erroItens } = await window.supabaseClient
     .from("ambiente_itens")
     .select("id, nome_item, quantidade, descricao, local_id")
@@ -39,20 +40,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  /* ============================
-     3️⃣ AGRUPA ITENS POR LOCAL
-     ============================ */
-  const mapaItens = {};
+  /* ===============================
+     3️⃣ AGRUPAR ITENS POR LOCAL
+     =============================== */
+  const mapaItensPorLocal = {};
   itens.forEach(item => {
-    if (!mapaItens[item.local_id]) {
-      mapaItens[item.local_id] = [];
+    if (!mapaItensPorLocal[item.local_id]) {
+      mapaItensPorLocal[item.local_id] = [];
     }
-    mapaItens[item.local_id].push(item);
+    mapaItensPorLocal[item.local_id].push(item);
   });
 
-  /* ============================
-     4️⃣ RENDERIZA
-     ============================ */
+  /* ===============================
+     4️⃣ RENDERIZAÇÃO FINAL
+     =============================== */
   lista.innerHTML = "";
 
   locais.forEach(local => {
@@ -80,7 +81,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     `;
 
     const itensDiv = card.querySelector(".itens-local");
-    const itensDoLocal = mapaItens[local.id] || [];
+    const itensDoLocal = mapaItensPorLocal[local.id] || [];
+
+    if (itensDoLocal.length === 0) {
+      itensDiv.innerHTML = `<p style="color:#94a3b8;">Nenhum item cadastrado.</p>`;
+    }
 
     itensDoLocal.forEach(item => {
 
@@ -111,11 +116,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       const radios = linha.querySelectorAll(`input[name="item_${item.id}"]`);
       const divObs = linha.querySelector(".divergencia");
 
-      radios.forEach(radio => {
-        radio.addEventListener("change", () => {
-          if (radio.value === "DIVERGENTE") {
+      radios.forEach(r => {
+        r.addEventListener("change", () => {
+          if (r.value === "DIVERGENTE") {
             divObs.style.display = "block";
-            card.querySelector(`input[value="DIVERGENTE"]`).checked = true;
+            card.querySelector(`input[name="local_${local.id}"][value="DIVERGENTE"]`).checked = true;
           } else {
             divObs.style.display = "none";
             divObs.querySelector("textarea").value = "";
