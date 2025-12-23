@@ -428,6 +428,7 @@ body {
 
 .input-admin.codigo {
   width: 160px;
+  flex: 1;
 }
 
 .input-admin.descricao {
