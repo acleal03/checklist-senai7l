@@ -16,12 +16,13 @@ document.addEventListener("DOMContentLoaded", () => {
   carregarChecklist();
 
   async function carregarChecklist() {
+
     const { data, error } = await window.supabaseClient
       .from("locais_ambiente")
       .select(`
         id,
         nome_exibicao,
-        itens_ambiente (
+        ambiente_itens (
           id,
           nome_item,
           quantidade,
@@ -32,11 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
       .order("nome_exibicao", { ascending: true });
 
     if (error) {
-      alert("Erro ao carregar checklist.");
       console.error(error);
+      alert("Erro ao carregar checklist.");
       return;
     }
 
+    console.log("LOCAIS + ITENS:", data); // 🔍 DEBUG
     renderizar(data || []);
   }
 
@@ -69,8 +71,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const itensDiv = bloco.querySelector(".itens-local");
 
-      // ITENS SEMPRE VISÍVEIS
-      local.itens_ambiente.forEach(item => {
+      if (!local.ambiente_itens || local.ambiente_itens.length === 0) {
+        itensDiv.innerHTML = `<p style="color:#94a3b8;">Nenhum item cadastrado.</p>`;
+      }
+
+      local.ambiente_itens.forEach(item => {
 
         const linha = document.createElement("div");
         linha.style.marginBottom = "12px";
@@ -96,16 +101,14 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
 
-        const radiosItem = linha.querySelectorAll(`input[name="item_${item.id}"]`);
+        const radios = linha.querySelectorAll(`input[name="item_${item.id}"]`);
         const divObs = linha.querySelector(".divergencia");
 
-        radiosItem.forEach(radio => {
+        radios.forEach(radio => {
           radio.addEventListener("change", () => {
 
             if (radio.value === "DIVERGENTE") {
               divObs.style.display = "block";
-
-              // Marca o LOCAL como divergente automaticamente
               bloco.querySelector(`input[name="local_${local.id}"][value="DIVERGENTE"]`).checked = true;
             } else {
               divObs.style.display = "none";
@@ -152,12 +155,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const nomeItem = bloco.querySelector("strong").innerText;
       const qtd = parseInt(bloco.innerText.match(/\((\d+)\)/)[1]);
       const status = input.value;
-      const obsTextarea = bloco.querySelector("textarea");
-      const obs = obsTextarea ? obsTextarea.value.trim() : null;
+      const obs = bloco.querySelector("textarea")?.value || null;
 
       if (status === "DIVERGENTE" && !obs) {
         alert(`Informe a divergência do item: ${nomeItem}`);
-        obsTextarea.focus();
         throw new Error("Checklist inválido");
       }
 
