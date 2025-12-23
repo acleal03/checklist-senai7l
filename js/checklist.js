@@ -17,31 +17,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
   carregarChecklist();
 
-  async function carregarChecklist() {
-    const { data, error } = await window.supabaseClient
-      .from("locais")
-      .select(`
-        id,
-        nome_exibicao,
-        itens_ambiente (
-          id,
-          nome_item,
-          quantidade,
-          descricao
-        )
-      `)
-      .eq("ambiente_id", ambienteId)
-      .order("nome_exibicao");
+    async function carregarChecklist() {
+        const { data, error } = await window.supabaseClient
+            .from("locais_ambiente")
+            .select(`
+            id,
+            nome_exibicao,
+            itens_ambiente (
+                id,
+                nome_item,
+                quantidade,
+                descricao
+            )
+            `)
+            .eq("ambiente_id", ambienteId)
+            .order("nome_exibicao", { ascending: true });
 
-    if (error) {
-      alert("Erro ao carregar checklist.");
-      console.error(error);
-      return;
+        if (error) {
+            alert("Erro ao carregar checklist.");
+            console.error(error);
+            return;
+        }
+
+        locais = data || [];
+        renderizar();
     }
 
-    locais = data || [];
-    renderizar();
-  }
 
   function renderizar() {
     lista.innerHTML = "";
