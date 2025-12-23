@@ -426,11 +426,11 @@ body {
   box-shadow: 0 0 0 2px rgba(56,189,248,0.35);
 }
 
-.input-admin.codigo {
+.input-admin codigo {
   width: 160px;
 }
 
-.input-admin.descricao {
+.input-admin descricao {
   width: 160px;
   
 }
