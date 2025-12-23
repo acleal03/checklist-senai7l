@@ -443,13 +443,40 @@ body {
 
 /* Responsivo */
 @media (max-width: 768px) {
-  .linha-labels,
-  .linha-inputs {
-    flex-direction: column;
+
+  .linha-labels {
+    display: none;
   }
 
-  .label-col.codigo,
-  .input-admin.codigo {
+  .linha-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .linha-inputs input {
     width: 100%;
   }
+
+  .input-admin.codigo,
+  .input-admin.descricao {
+    width: 100%;
+  }
+
+  /* Labels simulados para mobile */
+  .linha-inputs::before {
+    content: "Código do Ambiente";
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .linha-inputs input.codigo {
+    margin-top: 6px;
+  }
+
+  .linha-inputs input.descricao {
+    margin-top: 10px;
+  }
+
 }
