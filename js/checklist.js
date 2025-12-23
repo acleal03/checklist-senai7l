@@ -3,35 +3,56 @@ document.addEventListener("DOMContentLoaded", async () => {
   const ambienteId = sessionStorage.getItem("ambiente_id");
   const ambienteCodigo = sessionStorage.getItem("ambiente_codigo");
   const ambienteDescricao = sessionStorage.getItem("ambiente_descricao");
+  const usuarioId = sessionStorage.getItem("usuario_id");
 
   document.getElementById("tituloAmbiente").textContent =
     `${ambienteCodigo} - ${ambienteDescricao}`;
 
   const lista = document.getElementById("listaItens");
 
-  const { data: locais, error } = await window.supabaseClient
+  /* ============================
+     1️⃣ BUSCA LOCAIS
+     ============================ */
+  const { data: locais, error: erroLocais } = await window.supabaseClient
     .from("locais_ambiente")
-    .select(`
-      id,
-      nome_exibicao,
-      ambiente_itens!fk_ambiente_itens_local (
-        id,
-        nome_item,
-        quantidade,
-        descricao
-      )
-    `)
+    .select("id, nome_exibicao")
     .eq("ambiente_id", ambienteId)
-    .order("nome_exibicao", { ascending: true });
+    .order("nome_exibicao");
 
-    console.log("LOCAIS COM ITENS:", locais);
-
-  if (error) {
-    alert("Erro ao carregar checklist");
-    console.error(error);
+  if (erroLocais) {
+    alert("Erro ao carregar locais");
+    console.error(erroLocais);
     return;
   }
 
+  /* ============================
+     2️⃣ BUSCA ITENS
+     ============================ */
+  const { data: itens, error: erroItens } = await window.supabaseClient
+    .from("ambiente_itens")
+    .select("id, nome_item, quantidade, descricao, local_id")
+    .eq("ambiente_id", ambienteId);
+
+  if (erroItens) {
+    alert("Erro ao carregar itens");
+    console.error(erroItens);
+    return;
+  }
+
+  /* ============================
+     3️⃣ AGRUPA ITENS POR LOCAL
+     ============================ */
+  const mapaItens = {};
+  itens.forEach(item => {
+    if (!mapaItens[item.local_id]) {
+      mapaItens[item.local_id] = [];
+    }
+    mapaItens[item.local_id].push(item);
+  });
+
+  /* ============================
+     4️⃣ RENDERIZA
+     ============================ */
   lista.innerHTML = "";
 
   locais.forEach(local => {
@@ -59,8 +80,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     `;
 
     const itensDiv = card.querySelector(".itens-local");
+    const itensDoLocal = mapaItens[local.id] || [];
 
-    local.ambiente_itens.forEach(item => {
+    itensDoLocal.forEach(item => {
 
       const linha = document.createElement("div");
       linha.style.marginBottom = "12px";
@@ -89,13 +111,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       const radios = linha.querySelectorAll(`input[name="item_${item.id}"]`);
       const divObs = linha.querySelector(".divergencia");
 
-      radios.forEach(r => {
-        r.addEventListener("change", () => {
-          if (r.value === "DIVERGENTE") {
+      radios.forEach(radio => {
+        radio.addEventListener("change", () => {
+          if (radio.value === "DIVERGENTE") {
             divObs.style.display = "block";
-            card.querySelector(
-              `input[name="local_${local.id}"][value="DIVERGENTE"]`
-            ).checked = true;
+            card.querySelector(`input[value="DIVERGENTE"]`).checked = true;
           } else {
             divObs.style.display = "none";
             divObs.querySelector("textarea").value = "";
