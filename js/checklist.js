@@ -1,5 +1,4 @@
 // js/checklist.js
-
 document.addEventListener("DOMContentLoaded", () => {
 
   const ambienteId = sessionStorage.getItem("ambiente_id");
@@ -15,32 +14,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
   carregarChecklist();
 
-    async function carregarChecklist() {
+  async function carregarChecklist() {
 
-        const { data, error } = await window.supabaseClient
-            .from("locais_ambiente")
-            .select(`
-            id,
-            nome_exibicao,
-            ambiente_itens:ambiente_itens!local_id (
-                id,
-                nome_item,
-                quantidade,
-                descricao
-            )
-            `)
-            .eq("ambiente_id", ambienteId)
-            .order("nome_exibicao", { ascending: true });
+    const { data, error } = await window.supabaseClient
+      .from("locais_ambiente")
+      .select(`
+        id,
+        nome_exibicao,
+        ambiente_itens:ambiente_itens!local_id (
+          id,
+          nome_item,
+          quantidade,
+          descricao
+        )
+      `)
+      .eq("ambiente_id", ambienteId)
+      .order("nome_exibicao", { ascending: true });
 
-        if (error) {
-            console.error("ERRO SUPABASE:", error);
-            alert("Erro ao carregar checklist.");
-            return;
-        }
-
-        console.log("CHECKLIST CARREGADO:", data);
-        renderizar(data || []);
+    if (error) {
+      console.error("ERRO SUPABASE:", error);
+      alert("Erro ao carregar checklist.");
+      return;
     }
+
+    console.log("CHECKLIST:", data);
+    renderizar(data || []);
+  }
 
   function renderizar(locais) {
     lista.innerHTML = "";
@@ -71,10 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const itensDiv = bloco.querySelector(".itens-local");
 
-      if (!local.ambiente_itens || local.ambiente_itens.length === 0) {
-        itensDiv.innerHTML = `<p style="color:#94a3b8;">Nenhum item cadastrado.</p>`;
-      }
-
+      // 🔹 ITENS SEMPRE VISÍVEIS
       local.ambiente_itens.forEach(item => {
 
         const linha = document.createElement("div");
@@ -101,12 +97,11 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
 
-        const radios = linha.querySelectorAll(`input[name="item_${item.id}"]`);
+        const radiosItem = linha.querySelectorAll(`input[name="item_${item.id}"]`);
         const divObs = linha.querySelector(".divergencia");
 
-        radios.forEach(radio => {
+        radiosItem.forEach(radio => {
           radio.addEventListener("change", () => {
-
             if (radio.value === "DIVERGENTE") {
               divObs.style.display = "block";
               bloco.querySelector(`input[name="local_${local.id}"][value="DIVERGENTE"]`).checked = true;
@@ -155,10 +150,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const nomeItem = bloco.querySelector("strong").innerText;
       const qtd = parseInt(bloco.innerText.match(/\((\d+)\)/)[1]);
       const status = input.value;
-      const obs = bloco.querySelector("textarea")?.value || null;
+      const obsTextarea = bloco.querySelector("textarea");
+      const obs = obsTextarea ? obsTextarea.value.trim() : null;
 
       if (status === "DIVERGENTE" && !obs) {
         alert(`Informe a divergência do item: ${nomeItem}`);
+        obsTextarea.focus();
         throw new Error("Checklist inválido");
       }
 
