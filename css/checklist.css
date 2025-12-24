@@ -46,7 +46,7 @@
 
 .itens-local {
   margin-top: 14px;
-  display: none;
+  display: block !important;
 }
 
 .item-linha {
