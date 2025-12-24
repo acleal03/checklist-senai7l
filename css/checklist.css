@@ -1,5 +1,10 @@
 /* CHECKLIST INTELIGENTE POR LOCAL */
 
+.titulo {
+  position: relative;
+  z-index: 10;
+}
+
 .local-bloco {
   background: #020617;
   border-radius: 16px;
@@ -171,4 +176,21 @@
 /* LOCAL DIVERGENTE */
 .card-opcao.divergente {
   box-shadow: 0 0 0 2px #dc2626;
+}
+
+
+.item-check {
+  background: #0b4f6c;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 10px;
+  overflow: hidden; /* 🔥 impede vazamento */
+}
+
+.item-check .divergencia textarea {
+  width: 100%;
+  margin-top: 6px;
+  border-radius: 8px;
+  padding: 8px;
+  box-sizing: border-box;
 }
