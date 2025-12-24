@@ -4,57 +4,43 @@ document.addEventListener("DOMContentLoaded", async () => {
   const ambienteId = sessionStorage.getItem("ambiente_id");
   const ambienteCodigo = sessionStorage.getItem("ambiente_codigo");
   const ambienteDescricao = sessionStorage.getItem("ambiente_descricao");
+  const usuarioId = sessionStorage.getItem("usuario_id");
 
   document.getElementById("tituloAmbiente").textContent =
     `${ambienteCodigo} - ${ambienteDescricao}`;
 
   const lista = document.getElementById("listaItens");
+  const form = document.getElementById("formChecklist");
 
   /* ===============================
-     1️⃣ BUSCA LOCAIS
-  =============================== */
-  const { data: locais, error: erroLocais } = await window.supabaseClient
+     BUSCA LOCAIS + ITENS
+     =============================== */
+  const { data: locais, error } = await window.supabaseClient
     .from("locais_ambiente")
-    .select("id, nome_exibicao")
+    .select(`
+      id,
+      nome_exibicao,
+      ambiente_itens (
+        id,
+        nome_item,
+        quantidade,
+        descricao
+      )
+    `)
     .eq("ambiente_id", ambienteId)
-    .order("nome_exibicao");
+    .order("nome_exibicao", { ascending: true });
 
-  if (erroLocais) {
-    alert("Erro ao carregar locais");
-    console.error(erroLocais);
+  if (error) {
+    alert("Erro ao carregar checklist");
+    console.error(error);
     return;
   }
 
-  /* ===============================
-     2️⃣ BUSCA ITENS DO AMBIENTE
-  =============================== */
-  const { data: itens, error: erroItens } = await window.supabaseClient
-    .from("ambiente_itens")
-    .select("id, nome_item, quantidade, descricao, local_id")
-    .eq("ambiente_id", ambienteId);
-
-  if (erroItens) {
-    alert("Erro ao carregar itens");
-    console.error(erroItens);
-    return;
-  }
-
-  /* ===============================
-     3️⃣ AGRUPA ITENS POR LOCAL
-  =============================== */
-  const itensPorLocal = {};
-  itens.forEach(item => {
-    if (!itensPorLocal[item.local_id]) {
-      itensPorLocal[item.local_id] = [];
-    }
-    itensPorLocal[item.local_id].push(item);
-  });
-
-  /* ===============================
-     4️⃣ RENDERIZA
-  =============================== */
   lista.innerHTML = "";
 
+  /* ===============================
+     RENDERIZAÇÃO
+     =============================== */
   locais.forEach(local => {
 
     const card = document.createElement("div");
@@ -64,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     card.innerHTML = `
       <h3>${local.nome_exibicao}</h3>
 
-      <div style="margin-bottom:12px;">
+      <div class="local-status">
         <label>
           <input type="radio" name="local_${local.id}" value="OK" checked>
           OK
@@ -80,22 +66,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     `;
 
     const itensDiv = card.querySelector(".itens-local");
-    const itensLocal = itensPorLocal[local.id] || [];
 
-    if (itensLocal.length === 0) {
-      itensDiv.innerHTML = `<p style="color:#94a3b8;">Nenhum item cadastrado.</p>`;
-    }
-
-    itensLocal.forEach(item => {
+    /* ===============================
+       ITENS (SEMPRE VISÍVEIS)
+       =============================== */
+    local.ambiente_itens.forEach(item => {
 
       const linha = document.createElement("div");
-      linha.style.marginBottom = "12px";
+      linha.className = "item-linha";
 
       linha.innerHTML = `
         <strong>${item.nome_item}</strong> (${item.quantidade})
         ${item.descricao ? " - " + item.descricao : ""}
 
-        <div>
+        <div class="item-status">
           <label>
             <input type="radio" name="item_${item.id}" value="OK" checked>
             OK
@@ -107,21 +91,25 @@ document.addEventListener("DOMContentLoaded", async () => {
           </label>
         </div>
 
-        <div class="divergencia" style="display:none; margin-top:6px;">
-          <textarea rows="2" placeholder="Descreva a divergência" style="width:100%;"></textarea>
+        <div class="divergencia" style="display:none;">
+          <textarea rows="2" placeholder="Descreva a divergência"></textarea>
         </div>
       `;
 
       const radios = linha.querySelectorAll(`input[name="item_${item.id}"]`);
       const divObs = linha.querySelector(".divergencia");
 
-      radios.forEach(r => {
-        r.addEventListener("change", () => {
-          if (r.value === "DIVERGENTE") {
+      radios.forEach(radio => {
+        radio.addEventListener("change", () => {
+
+          if (radio.value === "DIVERGENTE") {
             divObs.style.display = "block";
+
+            // Força o LOCAL como divergente
             card.querySelector(
               `input[name="local_${local.id}"][value="DIVERGENTE"]`
             ).checked = true;
+
           } else {
             divObs.style.display = "none";
             divObs.querySelector("textarea").value = "";
@@ -133,6 +121,89 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     lista.appendChild(card);
+  });
+
+  /* ===============================
+     SALVAR CHECKLIST
+     =============================== */
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const observacoes = document.getElementById("observacoes").value;
+    const agora = new Date();
+
+    /* 1️⃣ CABEÇALHO */
+    const { data: checklist, error } = await window.supabaseClient
+      .from("checklists")
+      .insert([{
+        usuario_id: usuarioId,
+        ambiente_id: ambienteId,
+        data_br: agora.toLocaleDateString("pt-BR"),
+        hora_br: agora.toLocaleTimeString("pt-BR"),
+        observacoes
+      }])
+      .select()
+      .single();
+
+    if (error) {
+      alert("Erro ao salvar checklist");
+      return;
+    }
+
+    const checklistId = checklist.id;
+
+    /* 2️⃣ SALVAR STATUS DOS LOCAIS */
+    const locaisSalvar = [];
+
+    locais.forEach(local => {
+      const status = document.querySelector(
+        `input[name="local_${local.id}"]:checked`
+      ).value;
+
+      locaisSalvar.push({
+        checklist_id: checklistId,
+        local_id: local.id,
+        status
+      });
+    });
+
+    await window.supabaseClient
+      .from("checklist_locais")
+      .insert(locaisSalvar);
+
+    /* 3️⃣ SALVAR ITENS */
+    const itensSalvar = [];
+
+    document.querySelectorAll("[name^='item_']:checked").forEach(input => {
+
+      const bloco = input.closest(".item-linha");
+      const nomeItem = bloco.querySelector("strong").innerText;
+      const qtd = parseInt(bloco.innerText.match(/\((\d+)\)/)[1]);
+      const status = input.value;
+      const obsTextarea = bloco.querySelector("textarea");
+      const obs = obsTextarea ? obsTextarea.value.trim() : null;
+
+      if (status === "DIVERGENTE" && !obs) {
+        alert(`Informe a divergência do item: ${nomeItem}`);
+        obsTextarea.focus();
+        throw new Error("Checklist inválido");
+      }
+
+      itensSalvar.push({
+        checklist_id: checklistId,
+        nome_item: nomeItem,
+        quantidade: qtd,
+        status,
+        observacao: status === "DIVERGENTE" ? obs : null
+      });
+    });
+
+    await window.supabaseClient
+      .from("checklist_itens")
+      .insert(itensSalvar);
+
+    alert("Checklist salvo com sucesso!");
+    window.location.href = "dashboard.html";
   });
 
 });
