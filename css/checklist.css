@@ -96,3 +96,67 @@
 .divergencia textarea {
   border: 2px solid #ef4444;
 }
+
+/* ===============================
+   CHECKLIST – CORREÇÃO MOBILE
+   =============================== */
+
+.card-opcao {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Bloco dos itens do local */
+.itens-local {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Card individual do item */
+.item-check {
+  background: rgba(2, 6, 23, 0.45);
+  border-radius: 12px;
+  padding: 12px;
+  width: 100%;
+}
+
+/* Linha OK / Divergente */
+.item-check .status {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+/* Textarea de divergência */
+.item-check .divergencia {
+  margin-top: 8px;
+}
+
+.item-check textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  border-radius: 8px;
+  padding: 8px;
+  resize: vertical;
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+
+  .card-opcao {
+    padding: 14px;
+  }
+
+  .item-check {
+    padding: 10px;
+  }
+
+  .item-check strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+}

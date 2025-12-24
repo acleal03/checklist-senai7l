@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     local.ambiente_itens.forEach(item => {
 
       const linha = document.createElement("div");
-      linha.className = "item-linha";
+      linha.className = "item-check";
 
       linha.innerHTML = `
         <strong>${item.nome_item}</strong> (${item.quantidade})
