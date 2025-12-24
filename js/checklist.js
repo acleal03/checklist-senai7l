@@ -42,83 +42,24 @@ document.addEventListener("DOMContentLoaded", async () => {
      RENDERIZAÇÃO
      =============================== */
   locais.forEach(local => {
+    const radioLocalOk = card.querySelector(
+      `input[name="local_${local.id}"][value="OK"]`
+    );
 
-    const card = document.createElement("div");
-    card.className = "card-opcao";
-    card.style.textAlign = "left";
-
-    card.innerHTML = `
-      <h3>${local.nome_exibicao}</h3>
-
-      <div class="local-status">
-        <label>
-          <input type="radio" name="local_${local.id}" value="OK" checked>
-          OK
-        </label>
-        &nbsp;&nbsp;
-        <label>
-          <input type="radio" name="local_${local.id}" value="DIVERGENTE">
-          Divergente
-        </label>
-      </div>
-
-      <div class="itens-local"></div>
-    `;
-
-    const itensDiv = card.querySelector(".itens-local");
-
-    /* ===============================
-       ITENS (SEMPRE VISÍVEIS)
-       =============================== */
-    local.ambiente_itens.forEach(item => {
-
-      const linha = document.createElement("div");
-      linha.className = "item-check";
-
-      linha.innerHTML = `
-        <strong>${item.nome_item}</strong> (${item.quantidade})
-        ${item.descricao ? " - " + item.descricao : ""}
-
-        <div class="item-status">
-          <label>
-            <input type="radio" name="item_${item.id}" value="OK" checked>
-            OK
-          </label>
-          &nbsp;&nbsp;
-          <label>
-            <input type="radio" name="item_${item.id}" value="DIVERGENTE">
-            Divergente
-          </label>
-        </div>
-
-        <div class="divergencia" style="display:none;">
-          <textarea rows="2" placeholder="Descreva a divergência"></textarea>
-        </div>
-      `;
-
-      const radios = linha.querySelectorAll(`input[name="item_${item.id}"]`);
-      const divObs = linha.querySelector(".divergencia");
-
-      radios.forEach(radio => {
-        radio.addEventListener("change", () => {
-
-          if (radio.value === "DIVERGENTE") {
-            divObs.style.display = "block";
-            linha.classList.add("divergente");
-            card.classList.add("divergente");
-          } else {
-            divObs.style.display = "none";
-            divObs.querySelector("textarea").value = "";
-            linha.classList.remove("divergente");
-          }
-
-        });
+    radioLocalOk.addEventListener("change", () => {
+      itensDiv.querySelectorAll("input[value='OK']").forEach(r => {
+        r.checked = true;
       });
 
-      itensDiv.appendChild(linha);
+      itensDiv.querySelectorAll(".divergencia").forEach(div => {
+        div.style.display = "none";
+        const txt = div.querySelector("textarea");
+        if (txt) txt.value = "";
+      });
+
+      card.classList.remove("divergente");
     });
 
-    lista.appendChild(card);
   });
 
   const radioLocalOk = card.querySelector(
@@ -202,7 +143,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.querySelectorAll("[name^='item_']:checked").forEach(input => {
 
-      const bloco = input.closest(".item-linha");
+      const bloco = input.closest(".item-check");
       const nomeItem = bloco.querySelector("strong").innerText;
       const qtd = parseInt(bloco.innerText.match(/\((\d+)\)/)[1]);
       const status = input.value;
