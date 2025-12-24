@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const ambienteId = sessionStorage.getItem("ambiente_id");
   const ambienteCodigo = sessionStorage.getItem("ambiente_codigo");
   const ambienteDescricao = sessionStorage.getItem("ambiente_descricao");
-  const usuarioId = sessionStorage.getItem("usuario_id");
 
   document.getElementById("tituloAmbiente").textContent =
     `${ambienteCodigo} - ${ambienteDescricao}`;
@@ -12,13 +11,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   const lista = document.getElementById("listaItens");
 
   /* ===============================
-     1️⃣ BUSCAR LOCAIS DO AMBIENTE
-     =============================== */
+     1️⃣ BUSCA LOCAIS
+  =============================== */
   const { data: locais, error: erroLocais } = await window.supabaseClient
     .from("locais_ambiente")
     .select("id, nome_exibicao")
     .eq("ambiente_id", ambienteId)
-    .order("nome_exibicao", { ascending: true });
+    .order("nome_exibicao");
 
   if (erroLocais) {
     alert("Erro ao carregar locais");
@@ -27,13 +26,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   /* ===============================
-     2️⃣ BUSCAR ITENS DO AMBIENTE
-     =============================== */
+     2️⃣ BUSCA ITENS DO AMBIENTE
+  =============================== */
   const { data: itens, error: erroItens } = await window.supabaseClient
     .from("ambiente_itens")
     .select("id, nome_item, quantidade, descricao, local_id")
-    .eq("ambiente_id", ambienteId)
-    .order("nome_item", { ascending: true });
+    .eq("ambiente_id", ambienteId);
 
   if (erroItens) {
     alert("Erro ao carregar itens");
@@ -42,10 +40,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   /* ===============================
-     3️⃣ AGRUPAR ITENS POR LOCAL
-     =============================== */
+     3️⃣ AGRUPA ITENS POR LOCAL
+  =============================== */
   const itensPorLocal = {};
-
   itens.forEach(item => {
     if (!itensPorLocal[item.local_id]) {
       itensPorLocal[item.local_id] = [];
@@ -54,8 +51,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   /* ===============================
-     4️⃣ RENDERIZAR CHECKLIST
-     =============================== */
+     4️⃣ RENDERIZA
+  =============================== */
   lista.innerHTML = "";
 
   locais.forEach(local => {
@@ -67,7 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     card.innerHTML = `
       <h3>${local.nome_exibicao}</h3>
 
-      <div style="margin-bottom:10px;">
+      <div style="margin-bottom:12px;">
         <label>
           <input type="radio" name="local_${local.id}" value="OK" checked>
           OK
@@ -83,14 +80,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     `;
 
     const itensDiv = card.querySelector(".itens-local");
+    const itensLocal = itensPorLocal[local.id] || [];
 
-    const itensDoLocal = itensPorLocal[local.id] || [];
-
-    if (itensDoLocal.length === 0) {
+    if (itensLocal.length === 0) {
       itensDiv.innerHTML = `<p style="color:#94a3b8;">Nenhum item cadastrado.</p>`;
     }
 
-    itensDoLocal.forEach(item => {
+    itensLocal.forEach(item => {
 
       const linha = document.createElement("div");
       linha.style.marginBottom = "12px";
@@ -119,11 +115,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       const radios = linha.querySelectorAll(`input[name="item_${item.id}"]`);
       const divObs = linha.querySelector(".divergencia");
 
-      radios.forEach(radio => {
-        radio.addEventListener("change", () => {
-          if (radio.value === "DIVERGENTE") {
+      radios.forEach(r => {
+        r.addEventListener("change", () => {
+          if (r.value === "DIVERGENTE") {
             divObs.style.display = "block";
-            card.querySelector(`input[name="local_${local.id}"][value="DIVERGENTE"]`).checked = true;
+            card.querySelector(
+              `input[name="local_${local.id}"][value="DIVERGENTE"]`
+            ).checked = true;
           } else {
             divObs.style.display = "none";
             divObs.querySelector("textarea").value = "";
