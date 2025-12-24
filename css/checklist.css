@@ -1,155 +1,104 @@
-/* CHECKLIST INTELIGENTE POR LOCAL */
+/* ===============================
+   CHECKLIST INTELIGENTE POR LOCAL
+   =============================== */
 
 .titulo {
   position: relative;
   z-index: 10;
 }
 
-.local-bloco {
-  background: #020617;
-  border-radius: 16px;
+/* CARD DO LOCAL */
+.card-opcao {
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  border-radius: 18px;
   padding: 18px;
   margin-bottom: 18px;
-  box-shadow: 0 0 18px rgba(14,165,233,0.15);
-}
-
-.local-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-}
-
-.local-titulo {
-  font-size: 1.2rem;
-  color: #38bdf8;
-  font-weight: bold;
-}
-
-.local-status {
-  display: flex;
-  gap: 10px;
-}
-
-.local-status button {
-  padding: 6px 12px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.btn-ok {
-  background: #16a34a;
-  color: #fff;
-}
-
-.btn-div {
-  background: #dc2626;
-  color: #fff;
-}
-
-.itens-local {
-  margin-top: 14px;
-  display: block !important;
-}
-
-.item-linha {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #0f172a;
-  padding: 10px 12px;
-  border-radius: 10px;
-  margin-bottom: 8px;
-}
-
-.item-linha.ok {
-  color: #e5e7eb;
-}
-
-.item-linha.divergente {
-  background: #7f1d1d;
-  color: #fee2e2;
-}
-
-.item-info {
-  font-size: 0.95rem;
-}
-
-.item-acoes input[type="checkbox"] {
-  transform: scale(1.2);
-}
-
-.item-observacao {
-  margin-top: 6px;
-}
-
-.item-observacao textarea {
-  width: 100%;
-  border-radius: 10px;
-  padding: 8px;
-  resize: vertical;
-  border: 1px solid #ef4444;
-  display: none;
-}
-
-.card-opcao input[type="radio"]:checked {
-  accent-color: #38bdf8;
-}
-
-.divergencia textarea {
-  border: 2px solid #ef4444;
-}
-
-/* ===============================
-   CHECKLIST – CORREÇÃO MOBILE
-   =============================== */
-
-.card-opcao {
   width: 100%;
   max-width: 100%;
   overflow: hidden;
 }
 
-/* Bloco dos itens do local */
+/* LOCAL DIVERGENTE */
+.card-opcao.divergente {
+  box-shadow: 0 0 0 3px #dc2626;
+}
+
+/* TÍTULO DO LOCAL */
+.card-opcao h3 {
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+/* STATUS DO LOCAL */
+.local-status {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* LISTA DE ITENS */
 .itens-local {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* Card individual do item */
+/* CARD DO ITEM */
 .item-check {
-  background: rgba(2, 6, 23, 0.45);
-  border-radius: 12px;
+  background: #0b4f6c;
+  border-radius: 14px;
   padding: 12px;
+  overflow: hidden;
   width: 100%;
 }
 
-/* Linha OK / Divergente */
-.item-check .status {
+/* ITEM DIVERGENTE */
+.item-check.divergente {
+  border: 2px solid #dc2626;
+  background: #fee2e2;
+  color: #7f1d1d;
+}
+
+/* NOME DO ITEM */
+.item-check strong {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+/* STATUS DO ITEM */
+.item-status {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+/* DIVERGÊNCIA */
+.divergencia {
   margin-top: 6px;
 }
 
-/* Textarea de divergência */
-.item-check .divergencia {
-  margin-top: 8px;
-}
-
-.item-check textarea {
+.divergencia textarea {
   width: 100%;
-  max-width: 100%;
   box-sizing: border-box;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 8px;
   resize: vertical;
+  border: 2px solid #dc2626;
 }
 
-/* MOBILE */
+/* RADIO */
+input[type="radio"]:checked {
+  accent-color: #38bdf8;
+}
+
+/* ===============================
+   MOBILE
+   =============================== */
 @media (max-width: 480px) {
 
   .card-opcao {
@@ -160,37 +109,7 @@
     padding: 10px;
   }
 
-  .item-check strong {
-    display: block;
-    margin-bottom: 4px;
+  .item-status {
+    gap: 12px;
   }
-}
-
-
-/* ITEM DIVERGENTE */
-.item-check.divergente {
-  border: 2px solid #dc2626;
-  background: #fee2e2;
-}
-
-/* LOCAL DIVERGENTE */
-.card-opcao.divergente {
-  box-shadow: 0 0 0 2px #dc2626;
-}
-
-
-.item-check {
-  background: #0b4f6c;
-  border-radius: 12px;
-  padding: 12px;
-  margin-top: 10px;
-  overflow: hidden; /* 🔥 impede vazamento */
-}
-
-.item-check .divergencia textarea {
-  width: 100%;
-  margin-top: 6px;
-  border-radius: 8px;
-  padding: 8px;
-  box-sizing: border-box;
 }

@@ -42,40 +42,103 @@ document.addEventListener("DOMContentLoaded", async () => {
      RENDERIZAÇÃO
      =============================== */
   locais.forEach(local => {
+
+    const card = document.createElement("div");
+    card.className = "card-opcao";
+
+    card.innerHTML = `
+      <h3>${local.nome_exibicao}</h3>
+
+      <div class="local-status">
+        <label>
+          <input type="radio" name="local_${local.id}" value="OK" checked>
+          OK
+        </label>
+        <label>
+          <input type="radio" name="local_${local.id}" value="DIVERGENTE">
+          Divergente
+        </label>
+      </div>
+
+      <div class="itens-local"></div>
+    `;
+
+    const itensDiv = card.querySelector(".itens-local");
+
+    /* ===============================
+       ITENS
+       =============================== */
+    local.ambiente_itens.forEach(item => {
+
+      const linha = document.createElement("div");
+      linha.className = "item-check";
+
+      linha.innerHTML = `
+        <strong>${item.nome_item} (${item.quantidade})</strong>
+        ${item.descricao ? `<div>${item.descricao}</div>` : ""}
+
+        <div class="item-status">
+          <label>
+            <input type="radio" name="item_${item.id}" value="OK" checked>
+            OK
+          </label>
+          <label>
+            <input type="radio" name="item_${item.id}" value="DIVERGENTE">
+            Divergente
+          </label>
+        </div>
+
+        <div class="divergencia" style="display:none;">
+          <textarea rows="2" placeholder="Descreva a divergência"></textarea>
+        </div>
+      `;
+
+      const radios = linha.querySelectorAll(`input[name="item_${item.id}"]`);
+      const divObs = linha.querySelector(".divergencia");
+
+      radios.forEach(radio => {
+        radio.addEventListener("change", () => {
+          if (radio.value === "DIVERGENTE") {
+            divObs.style.display = "block";
+            linha.classList.add("divergente");
+            card.classList.add("divergente");
+
+            card.querySelector(
+              `input[name="local_${local.id}"][value="DIVERGENTE"]`
+            ).checked = true;
+
+          } else {
+            divObs.style.display = "none";
+            divObs.querySelector("textarea").value = "";
+            linha.classList.remove("divergente");
+          }
+        });
+      });
+
+      itensDiv.appendChild(linha);
+    });
+
+    /* ===============================
+       LOCAL OK → LIMPA ITENS
+       =============================== */
     const radioLocalOk = card.querySelector(
       `input[name="local_${local.id}"][value="OK"]`
     );
 
     radioLocalOk.addEventListener("change", () => {
-      itensDiv.querySelectorAll("input[value='OK']").forEach(r => {
-        r.checked = true;
-      });
-
-      itensDiv.querySelectorAll(".divergencia").forEach(div => {
-        div.style.display = "none";
-        const txt = div.querySelector("textarea");
-        if (txt) txt.value = "";
-      });
-
       card.classList.remove("divergente");
+
+      itensDiv.querySelectorAll(".item-check").forEach(item => {
+        item.classList.remove("divergente");
+        item.querySelector("input[value='OK']").checked = true;
+
+        const div = item.querySelector(".divergencia");
+        div.style.display = "none";
+        div.querySelector("textarea").value = "";
+      });
     });
 
-  });
-
-  const radioLocalOk = card.querySelector(
-    `input[name="local_${local.id}"][value="OK"]`
-  );
-
-  radioLocalOk.addEventListener("change", () => {
-    itensDiv.querySelectorAll("input[value='OK']").forEach(r => {
-      r.checked = true;
-    });
-
-    itensDiv.querySelectorAll(".divergencia").forEach(div => {
-      div.style.display = "none";
-      const txt = div.querySelector("textarea");
-      if (txt) txt.value = "";
-    });
+    lista.appendChild(card);
   });
 
   /* ===============================
@@ -87,19 +150,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const observacoes = document.getElementById("observacoes").value;
     const agora = new Date();
 
-    const radiosItens = document.querySelectorAll("[name^='item_']");
-
-    for (let i = 0; i < radiosItens.length; i += 2) {
-      const r1 = radiosItens[i];
-      const r2 = radiosItens[i + 1];
-
-      if (!r1.checked && !r2.checked) {
-        alert("Existem itens sem conferência (OK ou Divergente).");
-        return;
-      }
-    }
-
-    /* 1️⃣ CABEÇALHO */
     const { data: checklist, error } = await window.supabaseClient
       .from("checklists")
       .insert([{
@@ -117,48 +167,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    const checklistId = checklist.id;
-
-    /* 2️⃣ SALVAR STATUS DOS LOCAIS */
-    const locaisSalvar = [];
-
-    locais.forEach(local => {
-      const status = document.querySelector(
-        `input[name="local_${local.id}"]:checked`
-      ).value;
-
-      locaisSalvar.push({
-        checklist_id: checklistId,
-        local_id: local.id,
-        status
-      });
-    });
-
-    await window.supabaseClient
-      .from("checklist_locais")
-      .insert(locaisSalvar);
-
-    /* 3️⃣ SALVAR ITENS */
     const itensSalvar = [];
 
     document.querySelectorAll("[name^='item_']:checked").forEach(input => {
 
       const bloco = input.closest(".item-check");
       const nomeItem = bloco.querySelector("strong").innerText;
-      const qtd = parseInt(bloco.innerText.match(/\((\d+)\)/)[1]);
+      const qtd = parseInt(nomeItem.match(/\((\d+)\)/)[1]);
       const status = input.value;
-      const obsTextarea = bloco.querySelector("textarea");
-      const obs = obsTextarea ? obsTextarea.value.trim() : null;
+      const obs = bloco.querySelector("textarea")?.value || null;
 
       if (status === "DIVERGENTE" && !obs) {
         alert(`Informe a divergência do item: ${nomeItem}`);
-        obsTextarea.focus();
         throw new Error("Checklist inválido");
       }
 
       itensSalvar.push({
-        checklist_id: checklistId,
-        nome_item: nomeItem,
+        checklist_id: checklist.id,
+        nome_item: nomeItem.replace(/\(\d+\)/, "").trim(),
         quantidade: qtd,
         status,
         observacao: status === "DIVERGENTE" ? obs : null
