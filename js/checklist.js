@@ -104,16 +104,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           if (radio.value === "DIVERGENTE") {
             divObs.style.display = "block";
-
-            // Força o LOCAL como divergente
-            card.querySelector(
-              `input[name="local_${local.id}"][value="DIVERGENTE"]`
-            ).checked = true;
-
+            linha.classList.add("divergente");
+            card.classList.add("divergente");
           } else {
             divObs.style.display = "none";
             divObs.querySelector("textarea").value = "";
+            linha.classList.remove("divergente");
           }
+
         });
       });
 
@@ -121,6 +119,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     lista.appendChild(card);
+  });
+
+  const radioLocalOk = card.querySelector(
+    `input[name="local_${local.id}"][value="OK"]`
+  );
+
+  radioLocalOk.addEventListener("change", () => {
+    itensDiv.querySelectorAll("input[value='OK']").forEach(r => {
+      r.checked = true;
+    });
+
+    itensDiv.querySelectorAll(".divergencia").forEach(div => {
+      div.style.display = "none";
+      const txt = div.querySelector("textarea");
+      if (txt) txt.value = "";
+    });
   });
 
   /* ===============================
@@ -131,6 +145,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const observacoes = document.getElementById("observacoes").value;
     const agora = new Date();
+
+    const radiosItens = document.querySelectorAll("[name^='item_']");
+
+    for (let i = 0; i < radiosItens.length; i += 2) {
+      const r1 = radiosItens[i];
+      const r2 = radiosItens[i + 1];
+
+      if (!r1.checked && !r2.checked) {
+        alert("Existem itens sem conferência (OK ou Divergente).");
+        return;
+      }
+    }
 
     /* 1️⃣ CABEÇALHO */
     const { data: checklist, error } = await window.supabaseClient

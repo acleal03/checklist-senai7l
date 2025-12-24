@@ -160,3 +160,15 @@
     margin-bottom: 4px;
   }
 }
+
+
+/* ITEM DIVERGENTE */
+.item-check.divergente {
+  border: 2px solid #dc2626;
+  background: #fee2e2;
+}
+
+/* LOCAL DIVERGENTE */
+.card-opcao.divergente {
+  box-shadow: 0 0 0 2px #dc2626;
+}
