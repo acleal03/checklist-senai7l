@@ -12,8 +12,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const lista = document.getElementById("listaItens");
 
   /* ===============================
-     1️⃣ BUSCA LOCAIS
-  =============================== */
+     1️⃣ BUSCAR LOCAIS DO AMBIENTE
+     =============================== */
   const { data: locais, error: erroLocais } = await window.supabaseClient
     .from("locais_ambiente")
     .select("id, nome_exibicao")
@@ -27,8 +27,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   /* ===============================
-     2️⃣ BUSCA ITENS DO AMBIENTE
-  =============================== */
+     2️⃣ BUSCAR ITENS DO AMBIENTE
+     =============================== */
   const { data: itens, error: erroItens } = await window.supabaseClient
     .from("ambiente_itens")
     .select("id, nome_item, quantidade, descricao, local_id")
@@ -42,9 +42,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   /* ===============================
-     3️⃣ AGRUPA ITENS POR LOCAL
-  =============================== */
+     3️⃣ AGRUPAR ITENS POR LOCAL
+     =============================== */
   const itensPorLocal = {};
+
   itens.forEach(item => {
     if (!itensPorLocal[item.local_id]) {
       itensPorLocal[item.local_id] = [];
@@ -53,8 +54,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   /* ===============================
-     4️⃣ RENDERIZA CHECKLIST
-  =============================== */
+     4️⃣ RENDERIZAR CHECKLIST
+     =============================== */
   lista.innerHTML = "";
 
   locais.forEach(local => {
@@ -82,13 +83,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     `;
 
     const itensDiv = card.querySelector(".itens-local");
-    const itensLocal = itensPorLocal[local.id] || [];
 
-    if (itensLocal.length === 0) {
-      itensDiv.innerHTML = `<p style="color:#94a3b8;">Nenhum item neste local.</p>`;
+    const itensDoLocal = itensPorLocal[local.id] || [];
+
+    if (itensDoLocal.length === 0) {
+      itensDiv.innerHTML = `<p style="color:#94a3b8;">Nenhum item cadastrado.</p>`;
     }
 
-    itensLocal.forEach(item => {
+    itensDoLocal.forEach(item => {
 
       const linha = document.createElement("div");
       linha.style.marginBottom = "12px";
