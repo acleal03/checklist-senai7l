@@ -1,44 +1,39 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
+const supabase = require("../db");
 
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcryptjs')
+router.post("/login", async (req, res) => {
 
-const supabase = require('../db')
+const username = req.body.username;
+const senha = req.body.senha;
 
-router.post('/login', async (req,res)=>{
+console.log("LOGIN RECEBIDO:", username, senha);
 
-    const {re,senha} = req.body
+const { data, error } = await supabase
+.from("usuarios")
+.select("*")
+.eq("username", username)
+.eq("senha", senha)
+.limit(1);
 
-    const {data,error} = await supabase
-        .from('usuarios')
-        .select('*')
-        .eq('re',re)
-        .single()
+if(error){
+console.log("ERRO SUPABASE:", error);
+return res.status(500).json({erro:"Erro no banco"});
+}
 
-    if(error){
-        return res.status(401).json({erro:"Usuário não encontrado"})
-    }
+if(!data || data.length === 0){
+console.log("USUARIO NAO ENCONTRADO");
+return res.status(401).json({erro:"Usuário ou senha inválidos"});
+}
 
-    const usuario = data
+const user = data[0];
 
-    const senhaValida = bcrypt.compareSync(senha, usuario.senha)
+res.json({
+id:user.id,
+username:user.username,
+perfil:user.perfil
+});
 
-    if(!senhaValida){
-        return res.status(401).json({erro:"Senha inválida"})
-    }
+});
 
-    const token = jwt.sign(
-        {id:usuario.id,re:usuario.re},
-        process.env.JWT_SECRET,
-        {expiresIn:'8h'}
-    )
-
-    res.json({
-        token,
-        usuario
-    })
-
-})
-
-module.exports = router
+module.exports = router;

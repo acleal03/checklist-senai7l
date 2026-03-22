@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Dashboard</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="css/dashboard.css">
+
+<script src="js/dashboard.js" defer></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="topo">
+
+    <!-- ESQUERDA -->
+    <button class="btn-admin" onclick="window.location.href='admin.html'">
+        Admin
+    </button>
+
+    <!-- CENTRO -->
+    <div class="filtros-centro">
+        <label>Data início:</label>
+        <input type="date" id="dataInicio">
+
+        <label>Data fim:</label>
+        <input type="date" id="dataFim">
+    </div>
+
+    <!-- DIREITA -->
+    <button class="btn-sair" onclick="logout()">
+        Sair
+    </button>
+
+</div>
+
+<!-- BOTÃO CENTRAL -->
+<div class="acao-central">
+    <button class="btn-relatorio-geral" onclick="gerarPDFGeralDashboard()">
+        Relatório Geral de todos os ambientes
+    </button>
+</div>
+
+<h1 class="titulo">
+Selecione o Ambiente
+</h1>
+
+<div id="ambientes" class="grid-ambientes"></div>
+
+</div>
+
+</body>
+
+</html>

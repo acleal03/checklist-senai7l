@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Relatórios</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="css/relatorios.css">
+
+<script src="js/relatorios.js" defer></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<button class="btn-voltar" onclick="history.back()">
+← Voltar ao Painel
+</button>
+
+<h2 class="titulo">
+Relatórios de Checklist
+</h2>
+
+<div class="filtro">
+
+<select id="usuarioSelect"></select>
+
+<button class="btn-buscar" onclick="buscarRelatorioUsuario()">
+Buscar
+</button>
+
+<button onclick="gerarPDFGeral()" class="btn-pdf">
+PDF Geral
+</button>
+
+</div>
+
+<div class="header-tabela">
+
+    <div>Data</div>
+    <div>Usuário</div>
+    <div>Ações</div>
+    <div>Divergências</div>
+
+</div>
+
+<div id="listaRelatorios"></div>
+
+<div class="footer">
+Desenvolvido por acleal03
+</div>
+
+</div>
+
+</body>
+
+</html>

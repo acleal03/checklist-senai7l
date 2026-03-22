@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Administração de Locais</title>
+
+<link rel="stylesheet" href="css/admin-locais.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1 class="titulo">Administração de Locais de Ambiente</h1>
+
+<div class="form-area">
+
+<div class="input-group">
+<label>Ambiente</label>
+<select id="ambiente"></select>
+</div>
+
+<div class="input-group">
+<label>Tipo do Local</label>
+<input id="tipo" placeholder="Ex: Armário">
+</div>
+
+<div class="input-group">
+<label>Identificador</label>
+<input id="identificador" placeholder="Ex: 01">
+</div>
+
+</div>
+
+<div class="botoes">
+
+<button class="btn-salvar" onclick="salvarLocal()">
+💾 Salvar Local
+</button>
+
+<button class="btn-voltar" onclick="voltar()">
+← Voltar
+</button>
+
+</div>
+
+<div id="lista-locais" class="lista-ambientes"></div>
+
+</div>
+
+<script src="js/admin-locais.js"></script>
+
+</body>
+</html>

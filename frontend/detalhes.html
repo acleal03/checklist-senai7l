@@ -1,20 +1,18 @@
 const api = "http://localhost:3000";
 
-async function login(){
+async function login() {
 
 const username = document.getElementById("username").value;
 const senha = document.getElementById("senha").value;
 
 if(!username || !senha){
-
 alert("Informe usuário e senha");
 return;
-
 }
 
 try{
 
-const response = await fetch(`${api}/auth/login`,{
+const res = await fetch(`${api}/auth/login`,{
 
 method:"POST",
 
@@ -29,31 +27,21 @@ senha:senha
 
 });
 
-if(response.status === 401){
-
+if(!res.ok){
 alert("Usuário ou senha inválidos");
 return;
-
 }
 
-if(!response.ok){
+const user = await res.json();
 
-alert("Erro no servidor");
-return;
-
-}
-
-const data = await response.json();
-
-localStorage.setItem("usuario",JSON.stringify(data));
+localStorage.setItem("usuario",JSON.stringify(user));
 
 window.location.href="dashboard.html";
 
-}catch(error){
+}catch(e){
 
-console.error(error);
-
-alert("Erro de conexão com o servidor");
+console.error(e);
+alert("Erro ao conectar com o servidor");
 
 }
 

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Administração de Ambientes</title>
+
+<link rel="stylesheet" href="css/admin-ambientes.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1 class="titulo">Administração de Ambientes</h1>
+
+<div class="form-area">
+
+<div class="input-group small">
+<label>Ambiente</label>
+<input id="codigo" placeholder="Ex: 101A">
+</div>
+
+<div class="input-group">
+<label>Descrição do Ambiente</label>
+<input id="descricao" placeholder="Ex: Laboratório de Eletrotécnica">
+</div>
+
+</div>
+
+<div class="botoes">
+
+<button class="btn-salvar" onclick="salvarAmbiente()">
+💾 Salvar Ambiente
+</button>
+
+<button class="btn-voltar" onclick="voltar()">
+← Voltar
+</button>
+
+</div>
+
+<div id="lista-ambientes"></div>
+
+</div>
+
+<script src="js/admin-ambientes.js"></script>
+
+</body>
+</html>

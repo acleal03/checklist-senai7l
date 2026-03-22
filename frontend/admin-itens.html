@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Administração de Itens de Ambientes</title>
+
+<link rel="stylesheet" href="css/admin-itens.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1 class="titulo">Administração de Itens de Ambientes</h1>
+
+<div class="form-area">
+
+<div class="input-group">
+<label>Ambiente</label>
+<select id="ambiente"></select>
+</div>
+
+<div class="input-group">
+<label>Local</label>
+<select id="local"></select>
+</div>
+
+</div>
+
+<div class="form-area">
+
+<div class="input-group">
+<label>Nome do Item</label>
+<input id="nome" placeholder="Ex: Multímetro">
+</div>
+
+<div class="input-group small">
+<label>Quantidade</label>
+<input id="quantidade" type="number">
+</div>
+
+<div class="input-group">
+<label>Descrição</label>
+<input id="descricao" placeholder="Opcional">
+</div>
+
+</div>
+
+<div class="botoes">
+
+<button class="btn-salvar" onclick="salvarItem()">
+💾 Salvar Item
+</button>
+
+<button class="btn-voltar" onclick="voltar()">
+← Voltar
+</button>
+
+</div>
+
+<div id="lista-itens" class="lista-ambientes"></div>
+
+</div>
+
+<script src="js/admin-itens.js"></script>
+
+</body>
+</html>

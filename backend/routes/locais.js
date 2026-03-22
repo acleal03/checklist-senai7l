@@ -3,15 +3,14 @@ const router = express.Router()
 
 const supabase = require('../db')
 
-
 /* LISTAR */
 
 router.get('/', async (req,res)=>{
 
 const {data,error} = await supabase
-.from('ambientes')
-.select('id,codigo,descricao')
-.order('codigo')
+.from('locais_ambiente')
+.select('*')
+.order('ordem')
 
 if(error){
 return res.status(500).json(error)
@@ -22,17 +21,17 @@ res.json(data)
 })
 
 
-/* BUSCAR */
+/* LISTAR POR AMBIENTE */
 
-router.get('/:id', async (req,res)=>{
+router.get('/:ambiente_id', async (req,res)=>{
 
-const {id} = req.params
+const {ambiente_id} = req.params
 
 const {data,error} = await supabase
-.from('ambientes')
+.from('locais_ambiente')
 .select('*')
-.eq('id',id)
-.single()
+.eq('ambiente_id',ambiente_id)
+.order('ordem')
 
 if(error){
 return res.status(500).json(error)
@@ -47,16 +46,21 @@ res.json(data)
 
 router.post('/', async (req,res)=>{
 
-const {codigo,descricao} = req.body
+const {ambiente_id,tipo_local,identificador} = req.body
+
+const nome_exibicao = `${tipo_local} ${identificador}`
 
 const {data,error} = await supabase
-.from('ambientes')
+.from('locais_ambiente')
 .insert([
 {
-codigo,
-descricao
+ambiente_id,
+tipo_local,
+identificador,
+nome_exibicao
 }
 ])
+.select()
 
 if(error){
 return res.status(500).json(error)
@@ -67,20 +71,25 @@ res.json(data)
 })
 
 
-/* ATUALIZAR */
+/* EDITAR */
 
 router.put('/:id', async (req,res)=>{
 
 const {id} = req.params
-const {codigo,descricao} = req.body
+const {ambiente_id,tipo_local,identificador} = req.body
+
+const nome_exibicao = `${tipo_local} ${identificador}`
 
 const {data,error} = await supabase
-.from('ambientes')
+.from('locais_ambiente')
 .update({
-codigo,
-descricao
+ambiente_id,
+tipo_local,
+identificador,
+nome_exibicao
 })
 .eq('id',id)
+.select()
 
 if(error){
 return res.status(500).json(error)
@@ -98,7 +107,7 @@ router.delete('/:id', async (req,res)=>{
 const {id} = req.params
 
 const {error} = await supabase
-.from('ambientes')
+.from('locais_ambiente')
 .delete()
 .eq('id',id)
 
@@ -109,6 +118,5 @@ return res.status(500).json(error)
 res.json({success:true})
 
 })
-
 
 module.exports = router

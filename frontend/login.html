@@ -3,23 +3,65 @@
 <head>
 
 <meta charset="UTF-8">
-
 <title>Login</title>
 
-<script src="js/api.js"></script>
-<script src="js/login.js"></script>
+<link rel="stylesheet" href="css/style.css">
 
 </head>
 
-<body>
+<body class="login-bg">
 
-<h2>Login</h2>
+<div class="login-card">
 
-<input id="re" placeholder="RE">
+<div class="titulo-senai">
+SENAI SETE LAGOAS<br>
+FUNDAÇÃO ZERRENNER
+</div>
 
-<input id="senha" type="password" placeholder="Senha">
+<div class="subtitulo">
+Checklist de Ambientes
+</div>
 
-<button onclick="login()">Entrar</button>
+<div class="back-arrow">←</div>
+
+<div class="login-form">
+
+<div class="input-group">
+
+<span class="icon">👤</span>
+<input id="username" placeholder="Username or Email">
+
+</div>
+
+<div class="input-group">
+
+<span class="icon">🔒</span>
+<input id="senha" type="password" placeholder="Password">
+
+</div>
+
+<button class="login-btn" onclick="login()">LOGIN</button>
+
+<p class="forgot">Forgot Password?</p>
+
+<p class="signup">Don't have an account? <span>Sign Up</span></p>
+
+<div class="divider">OR</div>
+
+<p class="social-text">Sign up with Social Networks</p>
+
+<div class="social-icons">
+
+<a href="https://www.instagram.com/senaimg/" target="_blank">📷</a>
+<a href="https://www.fiemg.com.br/senai/" target="_blank">🌐</a>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="js/login.js"></script>
 
 </body>
 </html>

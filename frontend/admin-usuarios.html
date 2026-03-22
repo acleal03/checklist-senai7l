@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Administração de Usuários</title>
+
+<link rel="stylesheet" href="css/admin-usuarios.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1 class="titulo">Administração de Usuários</h1>
+
+<div class="form-area">
+
+<div class="input-group">
+<label>Usuário</label>
+<input id="username" placeholder="Ex: joao">
+</div>
+
+<div class="input-group">
+<label>Senha</label>
+<input id="senha" type="password">
+</div>
+
+<div class="input-group small">
+<label>Perfil</label>
+<select id="perfil">
+<option value="user">Usuário</option>
+<option value="admin">Admin</option>
+</select>
+</div>
+
+</div>
+
+<div class="botoes">
+
+<button class="btn-salvar" onclick="salvarUsuario()">
+💾 Salvar Usuário
+</button>
+
+<button class="btn-voltar" onclick="voltar()">
+← Voltar
+</button>
+
+</div>
+
+<div id="lista-usuarios" class="lista-ambientes"></div>
+
+</div>
+
+<script src="js/admin-usuarios.js"></script>
+
+</body>
+</html>
